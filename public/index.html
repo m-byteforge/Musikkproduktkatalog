@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="/styles.css" /> <!-- Link to your local styles.css file -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Home</title>
+</head>
+
+<body>
+  <header>
+    <h1>Music Product Catalog</h1>
+    <nav>
+      <ul>
+        <li><a href="#" onclick="openSidebar('loginSidebar', '/users/login')">Login</a></li>
+        <li><a href="#" onclick="openSidebar('registerSidebar', '/users/register')">Register</a></li>
+        <!-- Add more navigation items as needed -->
+      </ul>
+    </nav>
+  </header> <form action="/users/register" method="POST"></form>
+
+  <section id="products">
+    <h1>Products</h1>
+
+    <label for="sortSelect">Sort By:</label>
+    <select id="sortSelect">
+      <option value="name">Name</option>
+      <option value="price">Price</option>
+    </select>
+
+    <button id="applySort">Apply Sort</button>
+
+    <div id="product-container" class="product-grid">
+      <!-- Product cards will be dynamically added here -->
+    </div>
+  </section>
+
+  <!-- Login Sidebar -->
+  <div class="sidebar" id="loginSidebar">
+    <button class="close-btn" onclick="closeSidebar('loginSidebar')">Close</button>
+    <div class="sidebar-content">
+      <!-- Login form content will be dynamically loaded here -->
+    </div>
+  </div>
+
+  </header> <form action="/users/register" method="POST"></form>
+
+  <!-- Register Sidebar -->
+  <div class="sidebar" id="registerSidebar">
+    <button class="close-btn" onclick="closeSidebar('registerSidebar')">Close</button>
+    <div class="sidebar-content">
+      <!-- Register form content will be dynamically loaded here -->
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
