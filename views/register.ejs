@@ -1,3 +1,5 @@
+<!-- register.ejs -->
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,45 +12,45 @@
 </head>
 
 <body>
-    <div class="container">
-        <h2>Register</h2>
-        <% if (errors.length > 0) { %>
-            <ul>
-                <% errors.forEach(error => { %>
-                    <li><%= error.message %></li>
-                <% }) %>
-            </ul>
-        <% } %>
-        <form action="/users/register" method="post">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
+  <div class="container">
+    <h2>Register</h2>
+    <% if (errors.length > 0) { %>
+    <ul>
+      <% errors.forEach(error => { %>
+      <li><%= error.message %></li>
+      <% }) %>
+    </ul>
+    <% } %>
+    <form action="/users/register" method="post">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
 
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
 
-            <label for="password2">Confirm Password:</label>
-            <input type="password" id="password2" name="password2" required>
+      <label for="password2">Confirm Password:</label>
+      <input type="password" id="password2" name="password2" required>
 
-            <!-- New fields -->
-            <label for="city">City:</label>
-            <input type="text" id="city" name="city" required>
+      <!-- New fields -->
+      <label for="city">City:</label>
+      <input type="text" id="city" name="city" required>
 
-            <label for="country">Country:</label>
-            <input type="text" id="country" name="country" required>
+      <label for="country">Country:</label>
+      <input type="text" id="country" name="country" required>
 
-            <label for="zcode">ZIP Code:</label>
-            <input type="text" id="zcode" name="zcode" required>
+      <label for="zcode">ZIP Code:</label>
+      <input type="text" id="zcode" name="zcode" required>
 
-            <label for="telephone">Telephone:</label>
-            <input type="text" id="telephone" name="telephone" required>
+      <label for="telephone">Telephone:</label>
+      <input type="text" id="telephone" name="telephone" required>
 
-            <button type="submit">Register</button>
-        </form>
-        <p>Already have an account? <a href="/users/login">Login</a></p>
-    </div>
+      <button type="submit">Register</button>
+    </form>
+    <p>Already have an account? <a href="/users/login">Login</a></p>
+  </div>
 </body>
 
 </html>

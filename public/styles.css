@@ -1,159 +1,206 @@
 /* Reset and general styles */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-  }
-  
-  header {
-    background-color: #333;
-    color: #fff;
-    padding: 1rem;
-    text-align: center;
-  }
-  
-  nav ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  
-  nav ul li {
-    display: inline-block;
-    margin-right: 10px;
-  }
-  
-  nav a {
-    text-decoration: none;
-    color: #fff;
-    font-weight: bold;
-  }
-  
-  section {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  label {
-    font-weight: bold;
-    margin-right: 10px;
-  }
-  
-  select, button {
-    padding: 8px;
-    margin-bottom: 10px;
-  }
-  
-  /* Product card styles */
-  .product-card {
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin: 10px;
-    text-align: center;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s;
-  }
-  
-  .product-card:hover {
-    transform: scale(1.05);
-  }
-  
-  .product-image {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-  }
-  
-  .product-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-  }
-  
-  .product-price {
-    font-weight: bold;
-    color: #007bff;
-  }
-  
-  /* Sidebar styles */
-  .slide-container {
-    display: flex;
-    position: fixed;
-    top: 0;
-    right: -100%;
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-    transition: right 0.3s ease-in-out;
-  }
-  
-  .form-container {
-    width: 50%;
-    max-width: 400px;
-    background-color: #ffffff;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin: 20px;
-    border-radius: 8px;
-    transition: transform 0.3s;
-    transform: translateX(100%);
-  }
-  
-  .active {
-    right: 0;
-  }
-  
-  .form-container.active {
-    transform: translateX(0);
-  }
-  
-  /* Sidebar styles */
-  .sidebar {
-    height: 100%;
-    width: 0;
-    position: fixed;
-    top: 0;
-    right: 0;
-    background-color: #ffffff;
-    color: black;
-    overflow-x: hidden;
-    transition: 0.5s;
-    padding-top: 60px;
-  }
-  
-  .sidebar form {
-    padding: 15px;
-  }
-  
-  .sidebar button.close-btn {
-    color: rgb(182, 182, 182);
-    position: absolute;
-    top: 0;
-    right: 20px;
-    font-size: 24px;
-    margin-left: 50px;
-  }
-  
-  .sidebar a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 25px;
-    color: #818181;
-    display: block;
-    transition: 0.3s;
-  }
-  
-  .sidebar a:hover {
-    color: #f1f1f1;
-  }
-  
-  .sidebar .close-btn:hover {
-    color: #f1f1f1;
-  }
-  
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+/* ... (existing styles) ... */
+
+/* Updated styles for the header */
+header {
+  background-color: #333;
+  color: #ffffff;
+  padding: 1rem;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-left h1 {
+  margin: 0;
+}
+
+.header-right ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+.header-right li {
+  margin-right: 20px;
+}
+
+/* ... (unchanged styles below) ... */
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li {
+  display: inline-block;
+  margin-right: 10px;
+  color: #ffffff;
+}
+
+.nav a {
+  text-decoration: none;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+/* ... (unchanged styles below) ... */
+
+
+section {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+select,
+button {
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+/* Product card styles */
+/* ... (existing styles) ... */
+
+/* Updated styles for smaller product cards */
+.product-card {
+  border: 1px solid #ccc;
+  padding: 5px;
+  margin: 10px;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+}
+
+.product-card:hover {
+  transform: scale(1.05);
+}
+
+.product-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.product-price {
+  font-weight: bold;
+  color: #007bff;
+}
+
+/* ... (unchanged styles below) ... */
+
+.product-price {
+  font-weight: bold;
+  color: #151616;
+}
+
+/* Sidebar styles */
+.sidebar {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  top: 0;
+  right: 0;
+  background-color: #ffffff;
+  color: black;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidebar form {
+  padding: 15px;
+}
+
+.sidebar button.close-btn {
+  color: rgb(182, 182, 182);
+  position: absolute;
+  top: 0;
+  right: 20px;
+  font-size: 24px;
+  margin-left: 50px;
+}
+
+.sidebar a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidebar a:hover {
+  color: #f1f1f1;
+}
+
+.sidebar .close-btn:hover {
+  color: #f1f1f1;
+}
+
+/* ... (unchanged code above) ... */
+
+/* ... (existing styles) ... */
+
+/* Price filter styles */
+.price-filter {
+  margin-bottom: 20px;
+}
+
+.range-slider {
+  position: relative;
+  width: 100%;
+  height: 20px;
+}
+
+input[type="range"] {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+span {
+  position: absolute;
+  bottom: -20px;
+  transform: translateX(-50%);
+  color: #ffffff; /* Set text color to white */
+}
+
+span#minPriceOutput {
+  left: 0;
+}
+
+span#maxPriceOutput {
+  right: 0;
+}
+
+/* ... (existing styles) ... */

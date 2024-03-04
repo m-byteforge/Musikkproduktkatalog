@@ -1,42 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <link rel="stylesheet" href="/styles.css" /> <!-- Link to your local styles.css file -->
+  <link rel="stylesheet" href="/styles.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Home</title>
+  <title>Music Product Catalog</title>
 </head>
 
 <body>
   <header>
-    <h1>Music Product Catalog</h1>
+    <div class="header-top">
+      <div class="header-left">
+        <h1>Music Product Catalog</h1>
+      </div>
+      <div class="header-right">
+        <ul>
+          <li><a href="#" style="color: #fff;" onclick="openSidebar('loginSidebar', '/users/login')">Login</a></li>
+          <li><a href="#" style="color: #fff;" onclick="openSidebar('registerSidebar', '/users/register')">Register</a></li>
+          <li><button id="goToCart" onclick="openSidebar('cartSidebar', '/shoppingcart')">Go to shopping cart</button></li>
+        </ul>
+      </div>
+    </div>
     <nav>
-      <ul>
-        <li><a href="#" onclick="openSidebar('loginSidebar', '/users/login')">Login</a></li>
-        <li><a href="#" onclick="openSidebar('registerSidebar', '/users/register')">Register</a></li>
-        <!-- Add more navigation items as needed -->
-      </ul>
+      <label for="search">Search:</label>
+      <input type="text" id="search" placeholder="Search products">
+      <button id="searchButton">Search</button>
     </nav>
-  </header> <form action="/users/register" method="POST"></form>
+  </header>
 
   <section id="products">
     <h1>Products</h1>
 
-    <label for="sortSelect">Sort By:</label>
-    <select id="sortSelect">
-      <option value="name">Name</option>
-      <option value="price">Price</option>
-    </select>
-
-    <button id="applySort">Apply Sort</button>
+    <div class="price-filter">
+      <label for="priceRange">Price Range:</label>
+      <div class="range-slider">
+        <input type="range" id="priceRange" min="100" max="1000" step="1" value="100">
+        <span id="minPriceOutput">$100</span>
+        <span id="maxPriceOutput">$1000</span>
+      </div>
+    </div>
 
     <div id="product-container" class="product-grid">
       <!-- Product cards will be dynamically added here -->
     </div>
   </section>
 
-  <!-- Login Sidebar -->
   <div class="sidebar" id="loginSidebar">
     <button class="close-btn" onclick="closeSidebar('loginSidebar')">Close</button>
     <div class="sidebar-content">
@@ -44,9 +54,6 @@
     </div>
   </div>
 
-  </header> <form action="/users/register" method="POST"></form>
-
-  <!-- Register Sidebar -->
   <div class="sidebar" id="registerSidebar">
     <button class="close-btn" onclick="closeSidebar('registerSidebar')">Close</button>
     <div class="sidebar-content">
@@ -54,6 +61,14 @@
     </div>
   </div>
 
-  <script src="app.js"></script>
+  <div class="sidebar" id="cartSidebar">
+    <button class="close-btn" onclick="closeSidebar('cartSidebar')">Close</button>
+    <div class="sidebar-content">
+      <!-- Shopping cart content will be dynamically loaded here -->
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
 </body>
+
 </html>

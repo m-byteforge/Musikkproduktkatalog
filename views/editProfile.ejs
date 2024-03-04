@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Edit Profile</title>
+  <!-- Add any additional meta tags or stylesheets if needed -->
+</head>
+
+<body>
+  <div class="container">
+    <h2>Edit Profile</h2>
+    <form action="/users/edit-profile" method="post">
+      <label for="city">City:</label>
+      <input type="text" id="city" name="city" value="<%= user.city %>" required>
+
+      <label for="country">Country:</label>
+      <input type="text" id="country" name="country" value="<%= user.country %>" required>
+
+      <label for="zcode">Zip Code:</label>
+      <input type="text" id="zcode" name="zcode" value="<%= user.zcode %>" required>
+
+      <label for="telephone">Telephone:</label>
+      <input type="text" id="telephone" name="telephone" value="<%= user.telephone %>" required>
+
+      <button type="submit">Update Profile</button>
+    </form>
+    <p><a href="/users/dashboard">Back to Dashboard</a></p>
+  </div>
+</body>
+
+</html>

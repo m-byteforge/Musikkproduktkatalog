@@ -1,9 +1,25 @@
-// Fetch products from the server and dynamically add product cards
+// app.js
+
 const queryParams = new URLSearchParams(window.location.search);
 const category = queryParams.get('category');
 let sortBy = queryParams.get('sortBy');
+const priceRange = document.getElementById('priceRange');
+const minPriceOutput = document.getElementById('minPriceOutput');
+const maxPriceOutput = document.getElementById('maxPriceOutput');
+const searchInput = document.getElementById('search');
 
-const productsUrl = `/products?category=${category}&sortBy=${sortBy}`;
+document.addEventListener('DOMContentLoaded', () => {
+
+  const savedMinPrice = sessionStorage.getItem('minPrice');
+  const savedMaxPrice = sessionStorage.getItem('maxPrice');
+
+  if (savedMinPrice !== null && savedMaxPrice !== null) {
+    priceRange.value = savedMinPrice;
+    updatePriceOutputs();
+    filterProductsByPrice(parseInt(savedMinPrice));
+  }
+});
+const productsUrl = '/products';  // Simplify the URL since it's already handled on the server side
 
 fetch(productsUrl)
   .then(response => response.json())
@@ -16,34 +32,86 @@ fetch(productsUrl)
   })
   .catch(error => console.error('Error fetching products:', error));
 
-// Function to create a product card
+// ... (previous code)
 function createProductCard(product) {
   const card = document.createElement('div');
   card.classList.add('product-card');
 
-  const price = typeof product.price === 'number' ? product.price.toFixed(2) : parseFloat(product.price).toFixed(2);
+  const price = formatPrice(product.price);
 
   card.innerHTML = `
     <img src="/images/${product.images_name}.png" alt="${product.name}" class="product-image">
-    <h2>${product.name}</h2>
-    <p>${product.description}</p>
-    <p class="product-price">Price: $${price}</p>
+    <h5>${product.name}</h5>
+ 
+    <p class="product-price">Price: ${price}</p>
+    <button onclick="viewProductDetails('${product._id}')">View Details</button>
   `;
 
   return card;
 }
 
-// Handle sort change
-document.getElementById('applySort').addEventListener('click', () => {
-  const sortSelect = document.getElementById('sortSelect');
-  sortBy = sortSelect.value;
 
-  // Update the URL with the new sort parameter
-  const newUrl = `/products?category=${category}&sortBy=${sortBy}`;
-  window.location.href = newUrl;
-});
 
-// Function to open a sidebar and load content dynamically
+
+function formatPrice(price) {
+  return typeof price === 'number' ? `$${price.toFixed(2)}` : `$${parseFloat(price).toFixed(2)}`;
+}
+
+document.getElementById('searchButton').addEventListener('click', handleSearch);
+searchInput.addEventListener('input', handleSearch);
+
+function handleSearch() {
+  const searchValue = searchInput.value.toLowerCase();
+  const productCards = document.querySelectorAll('.product-card');
+
+  productCards.forEach(card => {
+    const productName = card.querySelector('h5').innerText.toLowerCase();
+
+    if (productName.includes(searchValue)) {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+priceRange.addEventListener('input', handlePriceRangeChange);
+priceRange.addEventListener('mouseup', handleRangeMouseUp);
+
+function handlePriceRangeChange() {
+  updatePriceOutputs();
+  sessionStorage.setItem('minPrice', priceRange.value);
+  filterProductsByPrice(parseInt(priceRange.value));
+}
+
+function handleRangeMouseUp() {
+  if (priceRange.value === '100') {
+    showAllProducts();
+  }
+}
+
+function showAllProducts() {
+  const productCards = document.querySelectorAll('.product-card');
+  productCards.forEach(card => {
+    card.style.display = 'block';
+  });
+}
+
+function updatePriceOutputs() {
+  minPriceOutput.innerText = `$${priceRange.value}`;
+  maxPriceOutput.innerText = `$1000`;
+}
+
+function filterProductsByPrice(minPrice) {
+  const productCards = document.querySelectorAll('.product-card');
+
+  productCards.forEach(card => {
+    const productPrice = parseFloat(card.querySelector('.product-price').innerText.replace('Price: $', ''));
+
+    card.style.display = productPrice >= minPrice && productPrice <= 1000 ? 'block' : 'none';
+  });
+}
+
 function openSidebar(sidebarId, pageUrl) {
   const sidebar = document.getElementById(sidebarId);
   const sidebarContent = sidebar.querySelector('.sidebar-content');
@@ -57,8 +125,18 @@ function openSidebar(sidebarId, pageUrl) {
     .catch(error => console.error('Error fetching content:', error));
 }
 
-// Function to close a sidebar
 function closeSidebar(sidebarId) {
   const sidebar = document.getElementById(sidebarId);
   sidebar.style.width = '0';
 }
+
+
+function viewProductDetails(productId) {
+  if (productId) {
+    const productDetailsUrl = `/product/detail/${productId}`;
+    window.location.href = productDetailsUrl;
+  } else {
+    console.error('Invalid productId:', productId);
+  }
+}
+

@@ -1,0 +1,65 @@
+<!-- Update the content of shoppingcart.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ... (existing code) ... -->
+</head>
+
+<body>
+  <header>
+    <!-- ... (existing code) ... -->
+  </header>
+
+  <!-- Update the content of shoppingcart.ejs -->
+<section id="shopping-cart">
+    <h1>Shopping Cart</h1>
+  
+    <div id="cart-container" class="cart-items">
+      <!-- Shopping cart items will be dynamically added here -->
+    </div>
+  
+    <p>Total Price: $<span id="total-price">0.00</span></p>
+  </section>
+  
+
+  <script src="app.js"></script>
+  <script>
+    // Function to handle increase and decrease buttons
+    function updateCart(productId, action) {
+      fetch('/update-cart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productId,
+          action,
+        }),
+      })
+      .then(response => response.json())
+      .then(cartItems => {
+        const cartContainer = document.getElementById('cart-container');
+        const totalPriceElement = document.getElementById('total-price');
+        
+        // Function to calculate total price
+        function calculateTotalPrice(items) {
+          return items.reduce((total, item) => total + item.total_price, 0);
+        }
+
+        // Clear existing cart items
+        cartContainer.innerHTML = "";
+
+        // Display each updated item in the cart
+        cartItems.forEach(item => {
+          const cartItem = createCartItem(item);
+          cartContainer.appendChild(cartItem);
+        });
+
+        // Display updated total price
+        totalPriceElement.textContent = calculateTotalPrice(cartItems).toFixed(2);
+      })
+      .catch(error => console.error('Error updating shopping cart:', error));
+    }
+  </script>
+</body>
+</html>

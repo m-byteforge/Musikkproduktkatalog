@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css"
-    />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <!-- ... (your head content) ... -->
     <title>Dashboard</title>
   </head>
   <body>
-   <!-- dashboard.ejs -->
-<h1>Welcome to the Dashboard, <%= user %>!</h1>
-<div id="productContainer"></div>
+    <h1>Welcome to the Dashboard, <%= user %>!</h1>
 
+    <div id="productContainer"></div>
 
     <a href="/users/logout">Logout</a>
 
-    <h4>Hello <%= user.charAt(0).toUpperCase()+user.slice(1) %></h4>
+    <h4>Hello <%= user.charAt(0).toUpperCase() + user.slice(1) %></h4>
+
+    <!-- Edit Profile Button -->
+    <a href="/users/edit-profile">Edit Profile</a>
+
+    <!-- Delete Account Button -->
+    <a href="/users/delete-account">Delete Account</a>
   </body>
 </html>

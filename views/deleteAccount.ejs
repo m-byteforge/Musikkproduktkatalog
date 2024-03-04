@@ -1,0 +1,22 @@
+<!-- deleteAccount.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- ... (your head content) ... -->
+    <title>Delete Account</title>
+  </head>
+  <body>
+    <h1>Delete Account</h1>
+
+    <p>Are you sure you want to delete your account, <%= user.name %>?</p>
+
+    <form action="/users/delete-account" method="post">
+      <label for="reason">Reason for deletion:</label>
+      <input type="text" id="reason" name="reason" required>
+      <button type="submit">Yes, Delete My Account</button>
+    </form>
+
+    <a href="/users/dashboard">Cancel</a>
+  </body>
+</html>

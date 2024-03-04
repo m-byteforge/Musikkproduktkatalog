@@ -1,0 +1,18 @@
+<!-- categories.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Include your head content here -->
+  <title>Plant Categories</title>
+</head>
+<body>
+  <h1>Plant Categories</h1>
+  
+  <ul>
+    <% categories.forEach(category => { %>
+      <li><a href="/products/plants?category=<%= category.category %>"><%= category.category %></a></li>
+    <% }); %>
+  </ul>
+</body>
+</html>
