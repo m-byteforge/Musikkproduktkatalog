@@ -1,65 +1,187 @@
-<!-- Update the content of shoppingcart.ejs -->
+<!--shoppingcart.ejs-->
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <!-- ... (existing code) ... -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/shoppingcart.css" />
 </head>
+<style>
+   /* Reset and general styles */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  text-align: center;
+}
 
+/* Header styles */
+header {
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.home-link {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  margin-right: 10px; /* Adjusted margin to move the home button to the left */
+}
+
+/* Main content styles */
+main {
+  max-width: 800px;
+  margin: 20px auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.cart-item {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.quantity-controls button {
+  background-color: #333;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.quantity-controls input {
+  width: 50px;
+  text-align: center;
+}
+
+.delete-button {
+  background-color: #ff6347;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background-color: #cc4125;
+}
+
+/* Total section styles */
+.total-section {
+  margin-top: 20px;
+  font-size: 1.2rem;
+}
+
+/* Cart actions styles */
+.cart-actions {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+#empty-cart-button,
+#checkout-button {
+  background-color: #333;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+#empty-cart-button:hover,
+#checkout-button:hover {
+  background-color: #555;
+}
+
+/* Footer Styles */
+footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: #333;
+  color: #fff;
+  margin-top: 8.90rem;
+}
+
+/* Media Queries for responsiveness */
+@media only screen and (max-width: 600px) {
+  main {
+    padding: 15px;
+  }
+}
+
+</style>
 <body>
-  <header>
-    <!-- ... (existing code) ... -->
-  </header>
+    <header>
+        <div class="header-top">
+            <h1>Your Shopping Cart</h1>
+            <a href="/" class="home-link">Home</a>
+        </div>
+    </header>
 
-  <!-- Update the content of shoppingcart.ejs -->
-<section id="shopping-cart">
-    <h1>Shopping Cart</h1>
-  
-    <div id="cart-container" class="cart-items">
-      <!-- Shopping cart items will be dynamically added here -->
-    </div>
-  
-    <p>Total Price: $<span id="total-price">0.00</span></p>
-  </section>
-  
+    <main>
+        <div id="cart-items" class="cart-items">
 
-  <script src="app.js"></script>
-  <script>
-    // Function to handle increase and decrease buttons
-    function updateCart(productId, action) {
-      fetch('/update-cart', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          productId,
-          action,
-        }),
-      })
-      .then(response => response.json())
-      .then(cartItems => {
-        const cartContainer = document.getElementById('cart-container');
-        const totalPriceElement = document.getElementById('total-price');
-        
-        // Function to calculate total price
-        function calculateTotalPrice(items) {
-          return items.reduce((total, item) => total + item.total_price, 0);
-        }
+            <div class="cart-item" data-id="1">
 
-        // Clear existing cart items
-        cartContainer.innerHTML = "";
+                <p>Name: Product 1</p>
+                <p>Price: $10.00</p>
+                <div class="quantity-controls">
+                    <button onclick="changeCartItemQuantity(1, 'decrease')">-</button>
+                    <input type="number" id="quantity-1" value="1" min="1" max="999">
+                    <button onclick="changeCartItemQuantity(1, 'increase')">+</button>
+                </div>
+                <button class="delete-button" data-id="1" onclick="removeFromCart(1)">Delete</button>
+            </div>
 
-        // Display each updated item in the cart
-        cartItems.forEach(item => {
-          const cartItem = createCartItem(item);
-          cartContainer.appendChild(cartItem);
-        });
+            <!-- Repeat the above structure for each item in the cart -->
+        </div>
+        <div class="total-section">
+            Total Price: $<span id="total-price">0.00</span>
+        </div>
 
-        // Display updated total price
-        totalPriceElement.textContent = calculateTotalPrice(cartItems).toFixed(2);
-      })
-      .catch(error => console.error('Error updating shopping cart:', error));
-    }
-  </script>
+       
+        <div class="cart-actions">
+          <button id="empty-cart-button" onclick="emptyShoppingCart()">Empty Shopping Cart</button>
+          <button id="checkout-button" onclick="proceedToCheckout()">Proceed to Checkout</button>
+      </div>
+    </main>
+
+    <footer>
+        <!-- Your footer content goes here -->
+    </footer>
+
+    <script src="/shoppingCart.js">
+const cartItemsKey = 'shoppingCart';
+
+    </script>
+    <script src="/app.js">
+      
+    </script>
 </body>
+
 </html>

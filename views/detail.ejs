@@ -1,36 +1,336 @@
-<!-- views/product.ejs -->
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <link rel="stylesheet" href="/styles.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title><%= product.name %></title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .back-button {
+      background-color: #333;
+      color: #fff;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #product-details {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-image-medium {
+      width: 100%;
+      max-height: 200px;
+      object-fit: contain;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+
+    .enlarged-image {
+      display: none;
+      position: fixed;
+      z-index: 2;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      max-width: 80%;
+      max-height: 80%;
+    }
+
+    .product-details-container {
+      text-align: left;
+      max-width: 600px;
+      width: 100%;
+    }
+
+    .product-name {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .product-description {
+      margin-bottom: 20px;
+    }
+
+    .product-price {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+
+    .action-buttons {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+
+    .action-button {
+      background-color: #333;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .action-button:hover {
+      background-color: #555;
+    }
+
+    footer {
+      padding: 1rem;
+      background-color: #333;
+      color: #fff;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.9);
+      padding-top: 20px;
+    }
+
+    .modal-content {
+      margin: auto;
+      display: block;
+      max-width: 80%;
+      max-height: 80%;
+    }
+
+    .close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      color: #fff;
+      font-size: 30px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
 </head>
 
 <body>
   <header>
-    <!-- Add a back button or other navigation elements as needed -->
-    <h1><%= product.name %></h1>
-    
+    <a href="javascript:history.go(-1)"><button class="back-button">Back</button></a>
   </header>
+  <main>
+    <section id="product-details">
+      <img src="/images/<%= product.images_name %>.png" alt="<%= product.name %>" class="product-image-medium"
+        onclick="openModal(this)">
+      <div class="modal" onclick="closeModal()">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="enlarged-image">
+      </div>
 
-  <section id="product-details">
-    <img src="/images/<%= product.images_name %>.png" alt="<%= product.name %>" class="product-image-large">
-    <h2><%= product.name %></h2>
-    <p><%= product.description %></p>
-    <p class="product-price">Price: $<%= product.price.toFixed(2) %></p>
+      <div class="product-details-container">
+        <h2 class="product-name"><%= product.name %></h2>
+        <p>ID: <%= product.id %></p>
+        <p class="product-description"><%= product.description %></p>
+        <p class="product-price">Price: $<%= parseFloat(product.price).toFixed(2) %></p>
 
-    <!-- Add buttons for adding to cart, increase, and decrease as needed -->
-    <button onclick="addToCart('<%= product.id %>')">Add to Cart</button>
-<button onclick="changeQuantity('<%= product.id %>', 'increase')">Increase Quantity</button>
-<button onclick="changeQuantity('<%= product.id %>', 'decrease')">Decrease Quantity</button>
+        <% if (product.customerRating !== undefined && product.customerRating >= 1 && product.customerRating <= 5) { %>
+        <div class="star-rating">
+          <% for (let i = 1; i <= 5; i++) { %>
+          <span class="star-icon <%= i <= product.customerRating ? 'filled' : 'empty' %>">&#9733;</span>
+          <% } %>
+        </div>
+        <% } %>
 
-    
-  </section>
+        <button class="action-button" onclick="addToCart('<%= product.id %>', '<%= product.name %>', <%= product.price %>)">Buy
+          this item</button>
+        <button class="action-button" id="cartButton"
+          onclick="window.location.href = '/shoppingcart'">🛒 Cart <span id="cartQuantity">0</span></button>
+      </div>
 
+      <div class="cart-actions">
+        <button id="empty-cart-button" onclick="emptyShoppingCart()">Empty Shopping Cart</button>
+        <button id="checkout-button" onclick="proceedToCheckout()">Proceed to Checkout</button>
+      </div>
+
+      <div class="total-section">
+        Total Price: $<span id="total-price">0.00</span>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+  </footer>
   <script src="app.js"></script>
+  <script>
+    let zoomLevel = 1;
+
+    function openModal(img) {
+      const modal = document.querySelector('.modal');
+      const modalImg = document.getElementById('enlarged-image');
+      modalImg.src = img.src;
+      modal.style.display = 'flex';
+      zoomLevel = 1; // Reset zoom level when opening modal
+    }
+
+    function closeModal() {
+      const modal = document.querySelector('.modal');
+      modal.style.display = 'none';
+    }
+
+    document.getElementById('enlarged-image').addEventListener('wheel', function (e) {
+      e.preventDefault();
+
+      zoomLevel += e.deltaY * -0.01;
+
+      // Restrict zoom level
+      zoomLevel = Math.min(Math.max(0.1, zoomLevel), 3);
+
+      document.getElementById('enlarged-image').style.transform = `scale(${zoomLevel})`;
+    });
+
+    function addToCart(productId, productName, productPrice) {
+      let shoppingCart = localStorage.getItem('shoppingCart');
+      shoppingCart = shoppingCart ? JSON.parse(shoppingCart) : [];
+
+      const existingProduct = shoppingCart.find(product => product.id === productId);
+
+      if (existingProduct) {
+        existingProduct.quantity += 1;
+      } else {
+        const product = {
+          id: productId,
+          quantity: 1,
+          name: productName,
+          price: productPrice,
+        };
+        shoppingCart.push(product);
+      }
+
+      localStorage.setItem('shoppingCart', JSON.stringify(shoppingCart));
+      updateCartQuantity();
+      updateTotalPrice(); // Added to update total price
+      // Display a notification
+      displayNotification('Product added to the shopping cart!');
+    }
+
+    function updateCartQuantity() {
+      let shoppingCart = localStorage.getItem('shoppingCart');
+      shoppingCart = shoppingCart ? JSON.parse(shoppingCart) : [];
+
+      const totalQuantity = shoppingCart.reduce((total, product) => total + product.quantity, 0);
+
+      const cartQuantityElement = document.getElementById('cartQuantity');
+
+      if (cartQuantityElement) {
+        cartQuantityElement.textContent = totalQuantity.toString();
+      }
+    }
+
+    function updateTotalPrice() {
+      let shoppingCart = localStorage.getItem('shoppingCart');
+      shoppingCart = shoppingCart ? JSON.parse(shoppingCart) : [];
+
+      const totalPrice = shoppingCart.reduce((total, product) => total + (product.quantity * product.price), 0);
+
+      const totalPriceElement = document.getElementById('total-price');
+
+      if (totalPriceElement) {
+        totalPriceElement.textContent = totalPrice.toFixed(2);
+      }
+    }
+
+    function displayNotification(message) {
+      // Create a notification element
+      const notification = document.createElement('div');
+      notification.className = 'notification';
+      notification.textContent = message;
+
+      // Append the notification to the body
+      document.body.appendChild(notification);
+
+      // Remove the notification after a delay (e.g., 3 seconds)
+      setTimeout(() => {
+        notification.remove();
+      }, 3000);
+    }
+
+    function emptyShoppingCart() {
+      const cartItemsKey = 'shoppingCart';
+      const existingCart = JSON.parse(localStorage.getItem(cartItemsKey)) || [];
+
+      if (existingCart.length > 0) {
+        localStorage.removeItem(cartItemsKey);
+
+        // Clear the cart items and update total price
+        const cartQuantityElement = document.getElementById('cartQuantity');
+        const totalElement = document.getElementById('total-price');
+
+        if (cartQuantityElement) {
+          cartQuantityElement.textContent = '0';
+        }
+
+        if (totalElement) {
+          totalElement.textContent = '0.00';
+        }
+
+        showEmptyCartNotification();
+      }
+    }
+
+    function showEmptyCartNotification() {
+      const notification = document.createElement('div');
+      notification.classList.add('notification');
+      notification.innerHTML = `
+        <p>Your cart has been emptied!</p>
+      `;
+
+      document.body.appendChild(notification);
+
+      setTimeout(() => {
+        document.body.removeChild(notification);
+      }, 3000);
+
+      notification.style.display = 'block';
+    }
+
+    function proceedToCheckout() {
+      window.location.href = '/checkout';
+    }
+
+  </script>
 </body>
+
 </html>

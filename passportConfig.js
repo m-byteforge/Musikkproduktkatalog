@@ -38,7 +38,7 @@ function initializePassport(passport) {
   passport.serializeUser((user, done) => {
     done(null, user.id);
   });
-
+  
   passport.deserializeUser(async (id, done) => {
     try {
       const user = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
@@ -47,7 +47,10 @@ function initializePassport(passport) {
       console.error('Error deserializing user:', error);
       return done(error);
     }
+    
   });
+  
 }
+
 
 module.exports = initializePassport;

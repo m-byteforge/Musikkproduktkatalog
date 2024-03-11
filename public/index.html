@@ -5,6 +5,8 @@
   <meta charset="UTF-8" />
   <link rel="stylesheet" href="/styles.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>Music Product Catalog</title>
 </head>
@@ -17,9 +19,14 @@
       </div>
       <div class="header-right">
         <ul>
+          
           <li><a href="#" style="color: #fff;" onclick="openSidebar('loginSidebar', '/users/login')">Login</a></li>
           <li><a href="#" style="color: #fff;" onclick="openSidebar('registerSidebar', '/users/register')">Register</a></li>
-          <li><button id="goToCart" onclick="openSidebar('cartSidebar', '/shoppingcart')">Go to shopping cart</button></li>
+          <li>
+            <button id="cartButton" onclick="window.location.href = '/shoppingcart'">🛒 Cart <span id="cartQuantity">0</span></button>
+
+            
+          </li>
         </ul>
       </div>
     </div>
@@ -27,6 +34,7 @@
       <label for="search">Search:</label>
       <input type="text" id="search" placeholder="Search products">
       <button id="searchButton">Search</button>
+      <button id="backButton" class="back-button">Back</button>
     </nav>
   </header>
 
@@ -45,30 +53,13 @@
     <div id="product-container" class="product-grid">
       <!-- Product cards will be dynamically added here -->
     </div>
+    
+    
   </section>
 
-  <div class="sidebar" id="loginSidebar">
-    <button class="close-btn" onclick="closeSidebar('loginSidebar')">Close</button>
-    <div class="sidebar-content">
-      <!-- Login form content will be dynamically loaded here -->
-    </div>
-  </div>
-
-  <div class="sidebar" id="registerSidebar">
-    <button class="close-btn" onclick="closeSidebar('registerSidebar')">Close</button>
-    <div class="sidebar-content">
-      <!-- Register form content will be dynamically loaded here -->
-    </div>
-  </div>
-
-  <div class="sidebar" id="cartSidebar">
-    <button class="close-btn" onclick="closeSidebar('cartSidebar')">Close</button>
-    <div class="sidebar-content">
-      <!-- Shopping cart content will be dynamically loaded here -->
-    </div>
-  </div>
-
   <script src="/app.js"></script>
+  <script>
+    
+  </script>
 </body>
-
 </html>

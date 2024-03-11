@@ -1,22 +1,146 @@
 <!-- deleteAccount.ejs -->
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- ... (your head content) ... -->
-    <title>Delete Account</title>
-  </head>
-  <body>
-    <h1>Delete Account</h1>
 
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="/styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Delete Account</title>
+
+  <style>
+    /* Reset and General Styles */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    /* Header Styles */
+    h1 {
+      background-color: #333;
+      color: #fff;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    /* Form Styles */
+    form {
+      max-width: 400px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin-bottom: 20px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #dc3545;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+      text-decoration: none;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-right: 10px; /* Add some margin for spacing */
+    }
+
+    button:hover {
+      background-color: #c82333;
+    }
+
+    /* Notification Styles */
+    .notification {
+      background-color: #d4edda;
+      color: #155724;
+      padding: 15px;
+      margin-top: 20px;
+      border: 1px solid #c3e6cb;
+      border-radius: 5px;
+      display: none;
+      text-align: center;
+    }
+
+    /* Additional Styles for the <p> element inside the form */
+    form p {
+      margin-bottom: 20px;
+    }
+
+    /* Adjusted Styles for Better Presentation */
+    form p {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Delete Account</h1>
+
+  <form method="POST" action="/users/delete-account">
+    <label for="reason">Reason for deletion:</label>
     <p>Are you sure you want to delete your account, <%= user.name %>?</p>
+    <input type="text" id="reason" name="reason" required>
+    <button type="submit">Yes, Delete My Account</button>
+    <button type="button" onclick="goToDashboard()">Cancel</button>
+  </form>
 
-    <form action="/users/delete-account" method="post">
-      <label for="reason">Reason for deletion:</label>
-      <input type="text" id="reason" name="reason" required>
-      <button type="submit">Yes, Delete My Account</button>
-    </form>
+  <div id="notification" class="notification" style="display:none;"></div>
 
-    <a href="/users/dashboard">Cancel</a>
-  </body>
+  <script>
+    const notificationDiv = document.getElementById('notification');
+
+    async function handleAccountDeletion() {
+      try {
+        const response = await fetch('/users/delete-account', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            reason: document.getElementById('reason').value,
+          }),
+        });
+
+        if (response.ok) {
+          showNotification('Account deleted successfully');
+          setTimeout(() => {
+            window.location.href = '/index.html';  // Adjust the URL as needed
+          }, 3000);
+        } else {
+          const errorData = await response.json();
+          showNotification(`Error: ${errorData.message}`);
+        }
+      } catch (error) {
+        console.error('Error deleting account:', error);
+        showNotification('An unexpected error occurred. Please try again later.');
+      }
+    }
+
+    function showNotification(message) {
+      notificationDiv.textContent = message;
+      notificationDiv.style.display = 'block';
+    }
+
+    function goToDashboard() {
+      window.location.href = 'dashboard';
+    }
+  </script>
+</body>
+
 </html>

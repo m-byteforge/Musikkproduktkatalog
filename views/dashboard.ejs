@@ -1,22 +1,83 @@
-<!DOCTYPE html>
+
+<!-- dashboard.ejs-->
+
 <html lang="en">
-  <head>
-    <!-- ... (your head content) ... -->
-    <title>Dashboard</title>
-  </head>
-  <body>
-    <h1>Welcome to the Dashboard, <%= user %>!</h1>
+<head>
+  <title>Dashboard</title>
+  <style>
+ /* Reset and General Styles */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
 
-    <div id="productContainer"></div>
+/* Header Styles */
+h1 {
+  color: #fff;
+  background-color: #333;
+  padding: 1rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
 
-    <a href="/users/logout">Logout</a>
+/* Content Container Styles */
+#productContainer {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
 
-    <h4>Hello <%= user.charAt(0).toUpperCase() + user.slice(1) %></h4>
+/* Link Styles */
+a {
+  text-decoration: none;
+  color: #fff;
+  padding: 10px;
+  background-color: #333;
+  border-radius: 5px;
+  margin: 5px;
+  display: inline-block;
+}
 
-    <!-- Edit Profile Button -->
-    <a href="/users/edit-profile">Edit Profile</a>
+a:hover {
+  background-color: #555;
+}
 
-    <!-- Delete Account Button -->
-    <a href="/users/delete-account">Delete Account</a>
-  </body>
+/* Logout Message Styles */
+h4 {
+  color: #333;
+  margin-top: 20px;
+}
+
+/* Footer Styles */
+footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: #333;
+  color: #fff;
+  margin-top: 8.90rem;
+}
+
+  </style>
+</head>
+<body>
+  <h1>Welcome to the Dashboard, <%= user %>!</h1>
+
+  <div id="productContainer"></div>
+
+  <a href="/logout">Logout</a>
+
+  <h4>Hello <%= user.charAt(0).toUpperCase() + user.slice(1) %></h4>
+
+  <a href="/users/edit-profile">Edit Profile</a>
+  <a href="/users/delete-account">Delete Account</a>
+
+  <a href="/shopping-cart">Shopping Cart</a>
+  <a href="/checkout">Checkout</a>
+</body>
+
 </html>

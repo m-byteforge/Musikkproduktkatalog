@@ -8,49 +8,172 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Register</title>
-  <!-- Add any additional meta tags or stylesheets if needed -->
+  <style>
+   
+   /* Reset and General Styles */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+/* Container Styles */
+.container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+/* Header Styles */
+h2 {
+  color: #fff;
+  background-color: #333;
+  padding: 1rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+/* Form Styles */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+label {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Icon Styles */
+i {
+  margin-right: 10px;
+  font-size: 1.2rem;
+}
+
+/* Button Styles */
+button {
+  background-color: #333;
+  color: #fff;
+  cursor: pointer;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #555;
+}
+
+/* Link Styles */
+p {
+  text-align: center;
+}
+
+a {
+  text-decoration: none;
+  color: #333;
+}
+
+a:hover {
+  color: #555;
+}
+
+  </style>
 </head>
 
 <body>
   <div class="container">
     <h2>Register</h2>
-    <% if (errors.length > 0) { %>
-    <ul>
-      <% errors.forEach(error => { %>
-      <li><%= error.message %></li>
-      <% }) %>
-    </ul>
-    <% } %>
-    <form action="/users/register" method="post">
-      <label for="name">Name:</label>
-      <input type="text" id="name" name="name" required>
+    <% if (errors.length> 0) { %>
+      <ul>
+        <% errors.forEach(error=> { %>
+          <li>
+            <%= error.message %>
+          </li>
+          <% }) %>
+      </ul>
+      <% } %>
+        <input type="hidden" id="customerInfo" name="customerInfo" value="" />
 
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" required>
 
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required>
+        <form id="customerInfoForm" style="display: none;">
+          <input type="text" id="name" name="name" required>
+          <input type="email" id="email" name="email" required>
+          <input type="text" id="city" name="city" required>
+          <input type="text" id="country" name="country" required>
+          <input type="text" id="zcode" name="zcode" required>
+          <input type="text" id="telephone" name="telephone" required>
+        </form>
 
-      <label for="password2">Confirm Password:</label>
-      <input type="password" id="password2" name="password2" required>
 
-      <!-- New fields -->
-      <label for="city">City:</label>
-      <input type="text" id="city" name="city" required>
+        <form id="registerForm" action="/users/register" method="post">
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" required>
 
-      <label for="country">Country:</label>
-      <input type="text" id="country" name="country" required>
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required>
 
-      <label for="zcode">ZIP Code:</label>
-      <input type="text" id="zcode" name="zcode" required>
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password" required>
 
-      <label for="telephone">Telephone:</label>
-      <input type="text" id="telephone" name="telephone" required>
+          <label for="password2">Confirm Password:</label>
+          <input type="password" id="password2" name="password2" required>
 
-      <button type="submit">Register</button>
-    </form>
-    <p>Already have an account? <a href="/users/login">Login</a></p>
+          <!-- New fields -->
+          <label for="city">City:</label>
+          <input type="text" id="city" name="city" required>
+
+          <label for="country">Country:</label>
+          <input type="text" id="country" name="country" required>
+
+          <label for="zcode">ZIP Code:</label>
+          <input type="text" id="zcode" name="zcode" required>
+
+          <label for="telephone">Telephone:</label>
+          <input type="text" id="telephone" name="telephone" required>
+
+          <button type="submit">Register</button>
+        
+        </form>
+        <p>Already have an account? <a href="/users/login">Login</a></p>
   </div>
+
+
+
+
+  <script>
+    function submitCustomerInfo() {
+      // Copy the data from the visible form to the hidden form
+      const visibleForm = document.getElementById('registerForm');
+      const hiddenForm = document.getElementById('customerInfoForm');
+
+      hiddenForm.querySelector('#name').value = visibleForm.querySelector('#name').value;
+      hiddenForm.querySelector('#email').value = visibleForm.querySelector('#email').value;
+      hiddenForm.querySelector('#city').value = visibleForm.querySelector('#city').value;
+      hiddenForm.querySelector('#country').value = visibleForm.querySelector('#country').value;
+      hiddenForm.querySelector('#zcode').value = visibleForm.querySelector('#zcode').value;
+      hiddenForm.querySelector('#telephone').value = visibleForm.querySelector('#telephone').value;
+
+      // Submit the hidden form
+      hiddenForm.submit();
+    }
+
+
+  </script>
 </body>
 
 </html>

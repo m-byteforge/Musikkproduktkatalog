@@ -1,18 +1,142 @@
-<!-- categories.ejs -->
+<!-- checkout.ejs -->
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <!-- Include your head content here -->
-  <title>Plant Categories</title>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="/styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Checkout</title>
+<style>
+ /* Reset and General Styles */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+/* Header Styles */
+header {
+  background-color: #333;
+  padding: 1rem;
+  text-align: center;
+}
+
+h1 {
+  color: #fff;
+}
+
+button {
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #555;
+}
+
+/* Checkout Steps Styles */
+#checkout-steps {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.checkout-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Total Price Styles */
+p {
+  text-align: center;
+  margin-top: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+#checkout-total-price {
+  color: #333;
+}
+
+/* Footer Styles */
+footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: #333;
+  color: #fff;
+  margin-top: 8.90rem;
+}
+
+
+</style>
 </head>
+
+
+
 <body>
-  <h1>Plant Categories</h1>
-  
-  <ul>
-    <% categories.forEach(category => { %>
-      <li><a href="/products/plants?category=<%= category.category %>"><%= category.category %></a></li>
-    <% }); %>
-  </ul>
+  <header>
+    <h1>Checkout</h1>
+    <button onclick="goToHome()">Home</button>
+  </header>
+
+  <section id="checkout-steps">
+    <!-- Step 1: Customer Information -->
+    <div id="step1" class="checkout-step">
+      <h2>Step 1: Customer Information</h2>
+      <% if (user) { %>
+        <!-- Display user information if logged in -->
+        <p>Name: <span id="customerName">
+            <%= user.name %>
+          </span></p>
+        <p>Email: <span id="customerEmail">
+            <%= user.email %>
+          </span></p>
+        <!-- You can include other user information here -->
+        <% } else { %>
+          <!-- Display customer information from the hidden form for non-logged-in users -->
+          <p>Name: <span id="customerName"></span></p>
+          <p>Email: <span id="customerEmail"></span></p>
+          <!-- Include other hidden form fields here -->
+          <% } %>
+            <button onclick="nextStep()">Next</button>
+    </div>
+
+    <!-- Step 2: Select Shipping Method -->
+    <div id="step2" class="checkout-step" style="display: none;">
+      <h2>Step 2: Select Shipping Method</h2>
+      <!-- Display shipping method options here -->
+      <button onclick="nextStep()">Next</button>
+    </div>
+
+    <!-- Step 3: Order Summary -->
+    <div id="step3" class="checkout-step" style="display: none;">
+      <h2>Step 3: Order Summary</h2>
+      <!-- Display order summary and total price -->
+      <button onclick="completePurchase()">Complete Purchase</button>
+      <button onclick="confirmOrder()">Confirm Order</button>
+    </div>
+  </section>
+
+  <p>Total Price: $<span id="checkout-total-price">0.00</span></p>
+
+  <script src="app.js"></script>
+  <script>
+    // ... (existing JavaScript code)
+  </script>
 </body>
+
 </html>

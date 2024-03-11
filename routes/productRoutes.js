@@ -30,29 +30,56 @@ router.get('/products', async (req, res) => {
 
 
 
+// Add this route to productRoutes.js
+router.get('/cart/items', (req, res) => {
+  const cartItems = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+  res.json(cartItems);
+});
 
-app.get('/product/details/:productId', async (req, res) => {
-  const productId = req.params.productId;
+// productRoutes.js
 
+// ... (existing code)
+
+router.get('/get-shipping-methods', async (req, res) => {
   try {
-    // Fetch the product details from the database using the productId
-    const result = await pool.query('SELECT * FROM products WHERE id = $1', [productId]);
+    // Fetch shipping methods from the server (replace this with your logic)
+    const shippingMethods = [
+      { id: 1, name: 'Standard Shipping', price: 5.99 },
+      { id: 2, name: 'Express Shipping', price: 12.99 },
+      // Add more shipping methods as needed
+    ];
 
-    // Check if a product with the given ID was found
-    if (result.rows.length === 0) {
-      return res.status(404).send('Product not found');
-    }
-
-    const product = result.rows[0];
-
-    // Render the product details page with the product information
-    res.render('product', { product });  // Update the template name to match your file name
+    res.json(shippingMethods);
   } catch (error) {
-    console.error('Error fetching product details:', error);
+    console.error('Error fetching shipping methods:', error);
     res.status(500).send('Internal Server Error');
   }
 });
 
-// Add other routes as needed
+// ... (existing code)
+
+
+// Add this route to productRoutes.js
+
+
+router.get('/product/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { rows } = await pool.query('SELECT * FROM products WHERE id = $1', [id]);
+
+    if (rows.length > 0) {
+      res.render('productdetails', { product: rows[0] });
+    } else {
+      res.status(404).send('Product not found');
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+
+
 
 module.exports = router;
