@@ -617,3 +617,61 @@ function emptyShoppingCart() {
 
 
 
+async function addComment() {
+  const commentText = document.getElementById('commentText').value;
+  const ratingInput = document.getElementById('ratingInput').value;
+
+  // Validate comment and rating
+  if (!commentText.trim() || !ratingInput) {
+    document.getElementById('commentErrorMessage').textContent = 'Please enter both comment and rating.';
+    return;
+  }
+
+  // Assuming you have a variable 'productId' with the current product ID
+  const productId = '<%= product.id %>';
+
+  try {
+    const response = await fetch('/api/comments/add', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        productId,
+        comment: commentText,
+        rating: ratingInput,
+      }),
+    });
+
+    if (response.ok) {
+      // Comment added successfully, update the UI or fetch the comments again
+      fetchProductReviews(productId);
+      // Clear input fields
+      document.getElementById('commentText').value = '';
+      document.getElementById('ratingInput').value = '';
+      document.getElementById('commentErrorMessage').textContent = '';
+    } else {
+      // Handle the error
+      console.error('Error adding comment:', response.statusText);
+      document.getElementById('commentErrorMessage').textContent = 'Error adding comment. Please try again.';
+    }
+  } catch (error) {
+    console.error('Error adding comment:', error);
+    document.getElementById('commentErrorMessage').textContent = 'Error adding comment. Please try again.';
+  }
+}
+
+
+
+
+
+async function getReviewsForProduct(productId) {
+  try {
+    const response = await fetch(`/api/reviews/product/${productId}`);
+    const reviews = await response.json();
+    return reviews;
+  } catch (error) {
+    console.error('Error fetching reviews:', error);
+    throw error;
+  }
+}

@@ -144,6 +144,43 @@
       font-weight: bold;
       cursor: pointer;
     }
+
+    /* Styles for product reviews section */
+    #product-reviews {
+      margin-top: 30px;
+      text-align: left;
+    }
+
+    #review-list {
+      margin-bottom: 20px;
+    }
+
+    #add-review-section {
+      background-color: #f4f4f4;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    #review-comment,
+    #review-rating {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    #submit-review {
+      background-color: #333;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #submit-review:hover {
+      background-color: #555;
+    }
   </style>
 </head>
 
@@ -189,146 +226,262 @@
         Total Price: $<span id="total-price">0.00</span>
       </div>
     </section>
+
+    <section id="product-reviews">
+      <h3>Product Reviews:</h3>
+      <div id="review-list">
+        <!-- Reviews will be dynamically added here -->
+      </div>
+
+      <div id="add-review-section">
+        <h2>Add Review</h2>
+        <textarea id="review-comment" placeholder="Enter your review"></textarea>
+        <label for="review-rating">Rating (1 to 5):</label>
+        <input type="number" id="review-rating" placeholder="(1 to 5)">
+        <button id="submit-review" onclick="submitReview()">Submit Review</button>
+      </div>
+    </section>
   </main>
 
   <footer>
+    <p>&copy; Music Product Catalog</p>
   </footer>
   <script src="app.js"></script>
   <script>
-    let zoomLevel = 1;
 
-    function openModal(img) {
-      const modal = document.querySelector('.modal');
-      const modalImg = document.getElementById('enlarged-image');
-      modalImg.src = img.src;
-      modal.style.display = 'flex';
-      zoomLevel = 1; // Reset zoom level when opening modal
+let zoomLevel = 1;
+
+function openModal(img) {
+  const modal = document.querySelector('.modal');
+  const modalImg = document.getElementById('enlarged-image');
+  modalImg.src = img.src;
+  modal.style.display = 'flex';
+  zoomLevel = 1; // Reset zoom level when opening modal
+}
+
+function closeModal() {
+  const modal = document.querySelector('.modal');
+  modal.style.display = 'none';
+}
+
+document.getElementById('enlarged-image').addEventListener('wheel', function (e) {
+  e.preventDefault();
+
+  zoomLevel += e.deltaY * -0.01;
+
+  // Restrict zoom level
+  zoomLevel = Math.min(Math.max(0.1, zoomLevel), 3);
+
+  document.getElementById('enlarged-image').style.transform = `scale(${zoomLevel})`;
+});
+
+function addToCart(productId, productName, productPrice) {
+  let shoppingCart = localStorage.getItem('shoppingCart');
+  shoppingCart = shoppingCart ? JSON.parse(shoppingCart) : [];
+
+  const existingProduct = shoppingCart.find(product => product.id === productId);
+
+  if (existingProduct) {
+    existingProduct.quantity += 1;
+  } else {
+    const product = {
+      id: productId,
+      quantity: 1,
+      name: productName,
+      price: productPrice,
+    };
+    shoppingCart.push(product);
+  }
+
+  localStorage.setItem('shoppingCart', JSON.stringify(shoppingCart));
+  updateCartQuantity();
+  updateTotalPrice(); // Added to update total price
+  // Display a notification
+  displayNotification('Product added to the shopping cart!');
+}
+
+function updateCartQuantity() {
+  let shoppingCart = localStorage.getItem('shoppingCart');
+  shoppingCart = shoppingCart ? JSON.parse(shoppingCart) : [];
+
+  const totalQuantity = shoppingCart.reduce((total, product) => total + product.quantity, 0);
+
+  const cartQuantityElement = document.getElementById('cartQuantity');
+
+  if (cartQuantityElement) {
+    cartQuantityElement.textContent = totalQuantity.toString();
+  }
+}
+
+function updateTotalPrice() {
+  let shoppingCart = localStorage.getItem('shoppingCart');
+  shoppingCart = shoppingCart ? JSON.parse(shoppingCart) : [];
+
+  const totalPrice = shoppingCart.reduce((total, product) => total + (product.quantity * product.price), 0);
+
+  const totalPriceElement = document.getElementById('total-price');
+
+  if (totalPriceElement) {
+    totalPriceElement.textContent = totalPrice.toFixed(2);
+  }
+}
+
+function displayNotification(message) {
+  // Create a notification element
+  const notification = document.createElement('div');
+  notification.className = 'notification';
+  notification.textContent = message;
+
+  // Append the notification to the body
+  document.body.appendChild(notification);
+
+  // Remove the notification after a delay (e.g., 3 seconds)
+  setTimeout(() => {
+    notification.remove();
+  }, 3000);
+}
+
+function emptyShoppingCart() {
+  const cartItemsKey = 'shoppingCart';
+  const existingCart = JSON.parse(localStorage.getItem(cartItemsKey)) || [];
+
+  if (existingCart.length > 0) {
+    localStorage.removeItem(cartItemsKey);
+
+    // Clear the cart items and update total price
+    const cartQuantityElement = document.getElementById('cartQuantity');
+    const totalElement = document.getElementById('total-price');
+
+    if (cartQuantityElement) {
+      cartQuantityElement.textContent = '0';
     }
 
-    function closeModal() {
-      const modal = document.querySelector('.modal');
-      modal.style.display = 'none';
+    if (totalElement) {
+      totalElement.textContent = '0.00';
     }
 
-    document.getElementById('enlarged-image').addEventListener('wheel', function (e) {
-      e.preventDefault();
+    showEmptyCartNotification();
+  }
+}
 
-      zoomLevel += e.deltaY * -0.01;
+function showEmptyCartNotification() {
+  const notification = document.createElement('div');
+  notification.classList.add('notification');
+  notification.innerHTML = `
+    <p>Your cart has been emptied!</p>
+  `;
 
-      // Restrict zoom level
-      zoomLevel = Math.min(Math.max(0.1, zoomLevel), 3);
+  document.body.appendChild(notification);
 
-      document.getElementById('enlarged-image').style.transform = `scale(${zoomLevel})`;
+  setTimeout(() => {
+    document.body.removeChild(notification);
+  }, 3000);
+
+  notification.style.display = 'block';
+}
+
+function proceedToCheckout() {
+  window.location.href = '/checkout';
+}
+
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchProductReviews('<%= product.id %>');
     });
+    
+    function fetchProductReviews(productId) {
+  fetch(`/api/reviews/product/${productId}`)
+    .then(response => response.json())
+    .then(reviews => {
+      console.log('Raw Reviews:', reviews); // Log the raw response for debugging
 
-    function addToCart(productId, productName, productPrice) {
-      let shoppingCart = localStorage.getItem('shoppingCart');
-      shoppingCart = shoppingCart ? JSON.parse(shoppingCart) : [];
-
-      const existingProduct = shoppingCart.find(product => product.id === productId);
-
-      if (existingProduct) {
-        existingProduct.quantity += 1;
-      } else {
-        const product = {
-          id: productId,
-          quantity: 1,
-          name: productName,
-          price: productPrice,
-        };
-        shoppingCart.push(product);
+      // Check if the reviews variable is an array
+      if (!Array.isArray(reviews)) {
+        console.error('Invalid reviews data format:', reviews);
+        return;
       }
 
-      localStorage.setItem('shoppingCart', JSON.stringify(shoppingCart));
-      updateCartQuantity();
-      updateTotalPrice(); // Added to update total price
-      // Display a notification
-      displayNotification('Product added to the shopping cart!');
-    }
+      console.log('Processed Reviews:', reviews); // Log the processed reviews for debugging
 
-    function updateCartQuantity() {
-      let shoppingCart = localStorage.getItem('shoppingCart');
-      shoppingCart = shoppingCart ? JSON.parse(shoppingCart) : [];
+      const reviewList = document.getElementById('review-list');
+      reviewList.innerHTML = '';
 
-      const totalQuantity = shoppingCart.reduce((total, product) => total + product.quantity, 0);
+      reviews.forEach(review => {
+        const reviewItem = document.createElement('div');
+        reviewItem.innerHTML = `
+          <p>${review.user}: ${review.rating} stars - ${review.comment}</p>
+          <p>${review.created_at}</p>
+          <hr>
+        `;
+        reviewList.appendChild(reviewItem);
+      });
+    })
+    .catch(error => console.error('Error fetching reviews:', error));
+}
 
-      const cartQuantityElement = document.getElementById('cartQuantity');
 
-      if (cartQuantityElement) {
-        cartQuantityElement.textContent = totalQuantity.toString();
-      }
-    }
 
-    function updateTotalPrice() {
-      let shoppingCart = localStorage.getItem('shoppingCart');
-      shoppingCart = shoppingCart ? JSON.parse(shoppingCart) : [];
+    function submitReview() {
+  const comment = document.getElementById('review-comment').value;
+  const rating = document.getElementById('review-rating').value;
 
-      const totalPrice = shoppingCart.reduce((total, product) => total + (product.quantity * product.price), 0);
+  if (!comment.trim() || !rating) {
+    return;
+  }
 
-      const totalPriceElement = document.getElementById('total-price');
+  const productId = '<%= product.id %>';
 
-      if (totalPriceElement) {
-        totalPriceElement.textContent = totalPrice.toFixed(2);
-      }
-    }
+  fetch('/api/reviews/add', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      productId,
+      rating,
+      comment,
+    }),
+  })
+    .then(response => response.json())
+    .then(data => {
+      // Fetch and update reviews UI
+      fetchProductReviews(productId);
 
-    function displayNotification(message) {
-      // Create a notification element
-      const notification = document.createElement('div');
-      notification.className = 'notification';
-      notification.textContent = message;
+      // Add the following line to persist the review in the database
+      addReviewToDatabase(productId, rating, comment);
 
-      // Append the notification to the body
-      document.body.appendChild(notification);
+      // Clear input fields
+      document.getElementById('review-comment').value = '';
+      document.getElementById('review-rating').value = '';
+    })
+    .catch(error => {
+      console.error('Error submitting review:', error);
+    });
+}
 
-      // Remove the notification after a delay (e.g., 3 seconds)
-      setTimeout(() => {
-        notification.remove();
-      }, 3000);
-    }
+// Add this function to persist the review in the database
+function addReviewToDatabase(productId, rating, comment) {
+  fetch('/api/reviews/add-to-database', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      productId,
+      rating,
+      comment,
+    }),
+  })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Review added to the database:', data.message);
+    })
+    .catch(error => {
+      console.error('Error adding review to the database:', error);
+    });
+}
 
-    function emptyShoppingCart() {
-      const cartItemsKey = 'shoppingCart';
-      const existingCart = JSON.parse(localStorage.getItem(cartItemsKey)) || [];
 
-      if (existingCart.length > 0) {
-        localStorage.removeItem(cartItemsKey);
 
-        // Clear the cart items and update total price
-        const cartQuantityElement = document.getElementById('cartQuantity');
-        const totalElement = document.getElementById('total-price');
-
-        if (cartQuantityElement) {
-          cartQuantityElement.textContent = '0';
-        }
-
-        if (totalElement) {
-          totalElement.textContent = '0.00';
-        }
-
-        showEmptyCartNotification();
-      }
-    }
-
-    function showEmptyCartNotification() {
-      const notification = document.createElement('div');
-      notification.classList.add('notification');
-      notification.innerHTML = `
-        <p>Your cart has been emptied!</p>
-      `;
-
-      document.body.appendChild(notification);
-
-      setTimeout(() => {
-        document.body.removeChild(notification);
-      }, 3000);
-
-      notification.style.display = 'block';
-    }
-
-    function proceedToCheckout() {
-      window.location.href = '/checkout';
-    }
 
   </script>
 </body>

@@ -1,3 +1,5 @@
+
+//insert-products.js
 const { Pool } = require('pg');
 const dotenv = require('dotenv');
 
@@ -30,6 +32,7 @@ const products = [
 /// ...
 
 // Function to insert products into the database
+
 const insertProducts = async () => {
   const client = await pool.connect();
 
