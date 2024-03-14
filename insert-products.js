@@ -1,3 +1,5 @@
+
+//insert-products.js
 const { Pool } = require('pg');
 const dotenv = require('dotenv');
 

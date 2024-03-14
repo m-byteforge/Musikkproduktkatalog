@@ -675,6 +675,7 @@ async function addComment() {
 }
 
 
+<<<<<<< HEAD
 async function getReviewsForProduct(productId) {
   try {
     const result = await pool.query(
@@ -682,11 +683,22 @@ async function getReviewsForProduct(productId) {
       [productId]
     );
     return result.rows;
+=======
+
+
+
+async function getReviewsForProduct(productId) {
+  try {
+    const response = await fetch(`/api/reviews/product/${productId}`);
+    const reviews = await response.json();
+    return reviews;
+>>>>>>> 74d9084bccd5d290600b374f295a6613af7dfb32
   } catch (error) {
     console.error('Error fetching reviews:', error);
     throw error;
   }
 }
+<<<<<<< HEAD
 
 //----------------------
 
@@ -706,3 +718,5 @@ i18next
       loadPath: '/locales/{{lng}}/{{ns}}.json' // Path to your translation files
     }
   });
+=======
+>>>>>>> 74d9084bccd5d290600b374f295a6613af7dfb32

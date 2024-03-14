@@ -5,7 +5,6 @@ const bcrypt = require("bcrypt");
 const passport = require("passport");
 const flash = require("express-flash");
 const session = require("express-session");
-const greeting = i18n.t('greeting'); // Retrieve translated text for 'greeting'
 
 const productController = require('./routes/productController');
 require("dotenv").config();
