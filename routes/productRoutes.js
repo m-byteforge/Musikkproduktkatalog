@@ -1,85 +1,63 @@
-// productRoutes.js
 
+//productRoutes.js
 const express = require('express');
 const router = express.Router();
 const { pool } = require('../dbConfig');
 
-// Function to fetch all plant categories
-router.get('/categories', async (req, res) => {
-  try {
-    // Assuming 'category' is a column in the products table
-    const { rows } = await pool.query('SELECT DISTINCT category FROM products');
-    res.render('categories', { categories: rows });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Internal Server Error');
-  }
-});
-
-// Function to fetch plants based on a selected category
 router.get('/products', async (req, res) => {
   try {
-    const { category } = req.query;
-    const { rows } = await pool.query('SELECT * FROM products WHERE category = $1', [category]);
-    res.render('productlist', { plants: rows });
+    const { rows } = await pool.query('SELECT * FROM products');
+    res.render('productlist', { products: rows });
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');
   }
 });
 
-
-
-// Add this route to productRoutes.js
-router.get('/cart/items', (req, res) => {
-  const cartItems = JSON.parse(localStorage.getItem('shoppingCart')) || [];
-  res.json(cartItems);
-});
-
-// productRoutes.js
-
-// ... (existing code)
-
-router.get('/get-shipping-methods', async (req, res) => {
+router.post('/products/add', async (req, res) => {
   try {
-    // Fetch shipping methods from the server (replace this with your logic)
-    const shippingMethods = [
-      { id: 1, name: 'Standard Shipping', price: 5.99 },
-      { id: 2, name: 'Express Shipping', price: 12.99 },
-      // Add more shipping methods as needed
-    ];
+    const { name, description, price } = req.body;
 
-    res.json(shippingMethods);
+    await pool.query(
+      'INSERT INTO products (name, description, price) VALUES ($1, $2, $3)',
+      [name, description, price]
+    );
+
+    res.redirect('/products');
   } catch (error) {
-    console.error('Error fetching shipping methods:', error);
+    console.error('Error adding product:', error);
     res.status(500).send('Internal Server Error');
   }
 });
 
-// ... (existing code)
-
-
-// Add this route to productRoutes.js
-
-
-router.get('/product/:id', async (req, res) => {
+router.post('/products/update/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { rows } = await pool.query('SELECT * FROM products WHERE id = $1', [id]);
+    const { name, description, price } = req.body;
 
-    if (rows.length > 0) {
-      res.render('productdetails', { product: rows[0] });
-    } else {
-      res.status(404).send('Product not found');
-    }
+    await pool.query(
+      'UPDATE products SET name = $1, description = $2, price = $3 WHERE id = $4',
+      [name, description, price, id]
+    );
+
+    res.redirect('/products');
   } catch (error) {
-    console.error(error);
+    console.error('Error updating product:', error);
     res.status(500).send('Internal Server Error');
   }
 });
 
+router.post('/products/delete/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
 
+    await pool.query('DELETE FROM products WHERE id = $1', [id]);
 
-
+    res.redirect('/products');
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 module.exports = router;

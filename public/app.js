@@ -28,6 +28,7 @@ function updateCartQuantity() {
   }
 }
 
+
 function createProductCard(product) {
   const card = document.createElement('div');
   card.classList.add('product-card');
@@ -42,11 +43,21 @@ function createProductCard(product) {
     <p class="product-price">Price: ${price}</p>
     <button onclick="viewProductDetails('${product.id}')">View Details</button>
     <button onclick="addToCart('${product.id}')">Buy</button>
-    
+    <button onclick="editProduct('${product.id}')">Edit</button>
+
   `;
 
   return card;
 }
+function editProduct(productId) {
+  if (productId) {
+    const editProductUrl = `/product/edit/${productId}`; // Assuming the URL for editing a product follows this pattern
+    window.location.href = editProductUrl;
+  } else {
+    console.error('Invalid productId:', productId);
+  }
+}
+
 
 function formatPrice(price) {
   return typeof price === 'number' ? `$${price.toFixed(2)}` : `$${parseFloat(price).toFixed(2)}`;
@@ -379,6 +390,8 @@ function showEmptyCartNotification() {
 function proceedToCheckout() {
   window.location.href = '/details';
 }
+
+
 function goHome() {
   window.location.href = '/';
 }
@@ -617,3 +630,79 @@ function emptyShoppingCart() {
 
 
 
+async function addComment() {
+  const commentText = document.getElementById('commentText').value;
+  const ratingInput = document.getElementById('ratingInput').value;
+
+  // Validate comment and rating
+  if (!commentText.trim() || !ratingInput) {
+    document.getElementById('commentErrorMessage').textContent = 'Please enter both comment and rating.';
+    return;
+  }
+
+  // Assuming you have a variable 'productId' with the current product ID
+  const productId = '<%= product.id %>';
+
+  try {
+    const response = await fetch('/api/comments/add', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        productId,
+        comment: commentText,
+        rating: ratingInput,
+      }),
+    });
+
+    if (response.ok) {
+      // Comment added successfully, update the UI or fetch the comments again
+      fetchProductReviews(productId);
+      // Clear input fields
+      document.getElementById('commentText').value = '';
+      document.getElementById('ratingInput').value = '';
+      document.getElementById('commentErrorMessage').textContent = '';
+    } else {
+      // Handle the error
+      console.error('Error adding comment:', response.statusText);
+      document.getElementById('commentErrorMessage').textContent = 'Error adding comment. Please try again.';
+    }
+  } catch (error) {
+    console.error('Error adding comment:', error);
+    document.getElementById('commentErrorMessage').textContent = 'Error adding comment. Please try again.';
+  }
+}
+
+
+async function getReviewsForProduct(productId) {
+  try {
+    const result = await pool.query(
+      'SELECT * FROM reviews WHERE product_id = $1 ORDER BY created_at DESC',
+      [productId]
+    );
+    return result.rows;
+  } catch (error) {
+    console.error('Error fetching reviews:', error);
+    throw error;
+  }
+}
+
+//----------------------
+
+// app.js
+
+const i18next = require('i18next');
+const Backend = require('i18next-http-backend');
+const LanguageDetector = require('i18next-browser-languagedetector');
+
+i18next
+  .use(Backend)
+  .use(LanguageDetector)
+  .init({
+    fallbackLng: 'en', // Default language if translation not available
+    debug: true, // Enable debug mode
+    backend: {
+      loadPath: '/locales/{{lng}}/{{ns}}.json' // Path to your translation files
+    }
+  });

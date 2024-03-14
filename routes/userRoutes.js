@@ -62,7 +62,7 @@ router.post("/delete-account", ensureAuthenticated, async (req, res) => {
 
     // Clear the session and redirect to the index page
     req.logout();  // Assuming you are using Passport.js
-    res.redirect('/index');  // Adjust the route as needed
+    res.redirect('/');  // Adjust the route as needed
   } catch (error) {
     await client.query('ROLLBACK');
     console.error('Error deleting user account:', error);
@@ -95,9 +95,8 @@ router.post('/delete-account', async (req, res) => {
   try {
     res.status(200).json({ message: 'Account deleted successfully' });
   } catch (error) {
-    console.error('Error deleting account:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+   
   }
-});
+})
 
 module.exports = router;

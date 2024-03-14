@@ -30,6 +30,7 @@ const products = [
 /// ...
 
 // Function to insert products into the database
+
 const insertProducts = async () => {
   const client = await pool.connect();
 

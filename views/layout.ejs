@@ -1,0 +1,34 @@
+<!-- views/layout.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- your head content here -->
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <div>
+            <h1>Your Website Name</h1>
+
+            <% if (user) { %>
+                <!-- Display user information when logged in -->
+                <div>
+                    <p>Welcome, <%= user.name %></p>
+                    <!-- Add user icon or avatar here -->
+                </div>
+            <% } %>
+        </div>
+    </header>
+
+    <!-- Main Content Section -->
+    <main>
+        <!-- Include content from other views -->
+        <%- content %>
+    </main>
+
+    <!-- Your other footer or scripts -->
+
+</body>
+</html>

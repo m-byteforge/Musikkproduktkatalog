@@ -5,19 +5,20 @@ const bcrypt = require("bcrypt");
 const passport = require("passport");
 const flash = require("express-flash");
 const session = require("express-session");
+const greeting = i18n.t('greeting'); // Retrieve translated text for 'greeting'
+
+const productController = require('./routes/productController');
 require("dotenv").config();
+const cors = require('cors');
+
 const app = express();
 
 const PORT = process.env.PORT || 4000;
-
 const initializePassport = require("./passportConfig");
 initializePassport(passport);
 
 app.use(express.urlencoded({ extended: false }));
-
-
 app.set("view engine", "ejs");
-
 
 app.use(
   session({
@@ -29,14 +30,11 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-
-
-app.use(express.static("public"));
-app.get("/favicon.ico", (req, res) => res.status(204));
-
-app.use(passport.initialize());
-app.use(passport.session());
 app.use(flash());
+app.use(cors());
+app.use(express.static("public"));
+
+app.get("/favicon.ico", (req, res) => res.status(204));
 
 app.get("/", (req, res) => {
   res.render("index");
@@ -109,16 +107,19 @@ app.post(
   })
 );
 
-app.get("/products", async (req, res) => {
-  try {
-    const result = await pool.query("SELECT * FROM products");
-    res.json(result.rows);
-  } catch (error) {
-    console.error("Error fetching products:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
+// Use the productController router
+app.use('/products', productController);
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send(`Internal Server Error: ${err.message}`);
 });
 
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
+// Middleware functions
 function checkAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     return res.redirect("/users/dashboard");
@@ -133,6 +134,7 @@ function checkNotAuthenticated(req, res, next) {
   res.redirect("/users/login");
 }
 
+//-----------------------------------------------------------------
 app.get("/users/edit-profile", checkNotAuthenticated, (req, res) => {
   res.render("editProfile", { user: req.user });
 });
@@ -276,9 +278,11 @@ app.get("/checkout", (req, res) => {
   res.render("checkout");
 });
 
-app.get("/checkout-step1", (req, res) => {
-  res.render("checkout-step1");
+
+app.get("/checkout", (req, res) => {
+  res.render("checkout");
 });
+
 
 app.get("/checkout-step2", (req, res) => {
   res.render("checkout-step2");
@@ -292,19 +296,6 @@ app.get("/order-confirmation", (req, res) => {
   res.render("order-confirmation");
 });
 
-app.get("/get-shipping-methods", (req, res) => {
-  try {
-    const shippingMethods = [
-      { name: "Standard Shipping", price: 5.99 },
-      { name: "Express Shipping", price: 12.99 },
-    ];
-
-    res.json(shippingMethods);
-  } catch (error) {
-    console.error("Error retrieving shipping methods:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
 
 app.get("/get-user-info", (req, res) => {
   try {
@@ -323,7 +314,7 @@ app.get("/get-user-info", (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-
+//---------------------------------------------------------------------------------------
 app.get("/get-shipping-methods", (req, res) => {
   try {
     const shippingMethods = [
@@ -369,6 +360,61 @@ app.get('/product/details/:productId', async (req, res) => {
   }
 });
 
+// ... (previous code)
+
+app.post("/api/reviews/add", async (req, res) => {
+  try {
+    const { productId, rating, comment } = req.body;
+
+    // Validate the inputs
+    if (!productId || !rating || !comment) {
+      return res.status(400).json({ error: "Incomplete review data" });
+    }
+
+    // Check if the product exists
+    const productResult = await pool.query('SELECT * FROM products WHERE id = $1', [productId]);
+
+    if (productResult.rows.length === 0) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    // Insert the review into the reviews table
+    const reviewResult = await pool.query(
+      'INSERT INTO reviews (product_id, user_id, rating, comment, created_at) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [productId, req.user.id, rating, comment, new Date()]
+    );
+
+    const newReview = reviewResult.rows[0];
+
+    // Return the newly added review
+    res.status(201).json(newReview);
+  } catch (error) {
+    console.error("Error adding review:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// ... (remaining code)
+
+
+
+app.get('/api/reviews/product/:productId', async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    const reviews = await getReviewsForProduct(productId);
+    res.json(reviews);
+  } catch (error) {
+    console.error('Error fetching reviews:', error);
+
+    res.status(500).json({ error: 'Internal Server Error', details: error.message });
+  }
+});
+
+//----------------------------------------
+
+
+
+app.use('/products', productController);
 
 
 app.listen(PORT, () => {

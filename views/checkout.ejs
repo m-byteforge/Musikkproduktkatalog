@@ -1,6 +1,4 @@
-<!-- checkout.ejs -->
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <link rel="stylesheet" href="/styles.css" />
@@ -8,80 +6,73 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>Checkout</title>
   <style>
-   /* Reset and General Styles */
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f4;
-}
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
 
-/* Header Styles */
-header {
-  background-color: #333;
-  padding: 1rem;
-  text-align: center;
-}
+    header {
+      background-color: #333;
+      padding: 1rem;
+      text-align: center;
+    }
 
-h1 {
-  color: #fff;
-}
+    h1 {
+      color: #fff;
+    }
 
-button {
-  background-color: #333;
-  color: #fff;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 10px;
-}
+    button {
+      background-color: #333;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
 
-button:hover {
-  background-color: #555;
-}
+    button:hover {
+      background-color: #555;
+    }
 
-/* Checkout Steps Styles */
-#checkout-steps {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-}
+    #checkout-steps {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
 
-.checkout-step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
+    .checkout-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
 
-/* Total Price Styles */
-p {
-  text-align: center;
-  margin-top: 20px;
-  font-weight: bold;
-  color: #333;
-}
+    p {
+      text-align: center;
+      margin-top: 20px;
+      font-weight: bold;
+      color: #333;
+    }
 
-#checkout-total-price {
-  color: #333;
-}
+    #checkout-total-price {
+      color: #333;
+    }
 
-/* Footer Styles */
-footer {
-  text-align: center;
-  padding: 1rem;
-  background-color: #333;
-  color: #fff;
-  margin-top: 8.90rem;
-}
-
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background-color: #333;
+      color: #fff;
+      margin-top: 8.90rem;
+    }
   </style>
 </head>
-
 <body>
   <header>
     <h1>Checkout</h1>
@@ -89,10 +80,8 @@ footer {
   </header>
 
   <section id="checkout-steps">
-    <!-- Step 1: Customer Information -->
     <div id="step1" class="checkout-step">
       <h2>Step 1: Customer Information</h2>
-      <!-- Display customer information from the server -->
       <p>Name: <span id="customerName"></span></p>
       <p>Email: <span id="customerEmail"></span></p>
       <p>City: <span id="customerCity"></span></p>
@@ -103,29 +92,20 @@ footer {
     </div>
     <div id="step2" class="checkout-step" style="display: none;">
       <h2>Step 2: Select Shipping Method</h2>
-      <!-- Display shipping method options here -->
       <div id="shippingMethods"></div>
-
       <button onclick="nextStep()">Next</button>
     </div>
-
-    <!-- Step 3: Order Summary -->
+    
     <div id="step3" class="checkout-step" style="display: none;">
       <h2>Step 3: Order Summary</h2>
-      <!-- Display order summary and total price -->
+      <p>Total Price (including shipping): $<span id="checkout-total-price">0.00</span></p>
       <button onclick="completePurchase()">Complete Purchase</button>
       <button onclick="confirmOrder()">Confirm Order</button>
     </div>
   </section>
 
-  <p>Total Price: $<span id="checkout-total-price">0.00</span></p>
-
   <script src="app.js"></script>
-
-
   <script>
-
-
     let currentStep = 1;
 
     function nextStep() {
@@ -137,13 +117,11 @@ footer {
       if (nextStepElement) {
         nextStepElement.style.display = 'block';
       } else {
-        // If there's no next step, complete the purchase
         completePurchase();
       }
     }
 
     function completePurchase() {
-      // Implement logic to complete the purchase
       alert('Purchase completed!');
     }
 
@@ -157,47 +135,60 @@ footer {
         const userInfoResponse = await fetch('/get-user-info');
         const userInfo = await userInfoResponse.json();
 
-        console.log('User Information:', userInfo);
-
-        // Display user information in the HTML
+        // Display user information in Step 1
         document.getElementById('customerName').innerText = userInfo.name || 'N/A';
         document.getElementById('customerEmail').innerText = userInfo.email || 'N/A';
         document.getElementById('customerCity').innerText = userInfo.city || 'N/A';
         document.getElementById('customerCountry').innerText = userInfo.country || 'N/A';
         document.getElementById('customerZcode').innerText = userInfo.zcode || 'N/A';
         document.getElementById('customerTelephone').innerText = userInfo.telephone || 'N/A';
+
+        // Fetch and display shipping methods in Step 2
+        try {
+          const shippingMethodsResponse = await fetch('/get-shipping-methods');
+          const shippingMethods = await shippingMethodsResponse.json();
+
+          const shippingMethodsDiv = document.getElementById('shippingMethods');
+          shippingMethods.forEach(method => {
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = 'shippingMethod';
+            radio.value = `${method.name} - $${method.price.toFixed(2)}`;
+            shippingMethodsDiv.appendChild(radio);
+
+            const label = document.createElement('label');
+            label.innerHTML = `${method.name} - $${method.price.toFixed(2)}`;
+            shippingMethodsDiv.appendChild(label);
+
+            shippingMethodsDiv.appendChild(document.createElement('br'));
+          });
+        } catch (error) {
+          console.error('Error fetching shipping methods:', error);
+        }
+
+        // Fetch cart items and calculate total price in Step 3
+        try {
+          const cartItemsResponse = await fetch('/get-cart-items');
+          const cartItems = await cartItemsResponse.json();
+
+          const totalPrice = cartItems.reduce((total, item) => {
+            return total + item.price * item.quantity;
+          }, 0);
+
+          const shippingMethodElement = document.querySelector('input[name="shippingMethod"]:checked');
+          if (shippingMethodElement) {
+            const shippingCost = parseFloat(shippingMethodElement.value.split(' - ')[1]);
+            totalPrice += shippingCost;
+          }
+
+          document.getElementById('checkout-total-price').innerText = totalPrice.toFixed(2);
+        } catch (error) {
+          console.error('Error fetching cart items:', error);
+        }
       } catch (error) {
         console.error('Error fetching user information:', error);
       }
-
-      try {
-        // Fetch shipping methods
-        const shippingMethodsResponse = await fetch('/get-shipping-methods');
-        const shippingMethods = await shippingMethodsResponse.json();
-
-        console.log('Shipping Methods:', shippingMethods);
-
-        // Display shipping methods in the HTML
-        const shippingMethodsDiv = document.getElementById('shippingMethods');
-        shippingMethods.forEach(method => {
-          const radio = document.createElement('input');
-          radio.type = 'radio';
-          radio.name = 'shippingMethod';
-          radio.value = `${method.name} - $${method.price.toFixed(2)}`;
-          shippingMethodsDiv.appendChild(radio);
-
-          const label = document.createElement('label');
-          label.innerHTML = `${method.name} - $${method.price.toFixed(2)}`;
-          shippingMethodsDiv.appendChild(label);
-
-          shippingMethodsDiv.appendChild(document.createElement('br'));
-        });
-      } catch (error) {
-        console.error('Error fetching shipping methods:', error);
-      }
     });
   </script>
-
 </body>
-
 </html>

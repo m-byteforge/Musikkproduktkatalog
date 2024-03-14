@@ -1,0 +1,29 @@
+<!-- confirmation.ejs -->
+<html lang="en">
+<head>
+  <!-- Include necessary meta tags and styles -->
+  <title>Order Confirmation</title>
+</head>
+<body>
+  <!-- Your confirmation page content here -->
+  <h1>Order Confirmation</h1>
+  <!-- Display order details dynamically here -->
+  <p>Order Number: <%= order.orderNumber %></p>
+  <p>Customer Information:</p>
+  <p>Name: <%= order.customerName %></p>
+  <p>Email: <%= order.customerEmail %></p>
+  <!-- Add more customer details as needed -->
+  <p>Ordered Products:</p>
+  <% order.products.forEach(product => { %>
+    <p>ID: <%= product.id %></p>
+    <p>Name: <%= product.name %></p>
+    <p>Quantity: <%= product.quantity %></p>
+    <p>Price per Product: $<%= product.price.toFixed(2) %></p>
+    <p>Total Price: $<%= (product.quantity * product.price).toFixed(2) %></p>
+  <% }); %>
+  <p>Shipping Method: <%= order.shippingMethod %></p>
+  <p>Estimated Shipping Date: <%= order.estimatedShippingDate %></p>
+  <p>Total Price (including shipping): $<%= order.totalPrice.toFixed(2) %></p>
+  <a href="/">Home</a>
+</body>
+</html>
