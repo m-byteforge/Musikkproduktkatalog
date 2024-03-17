@@ -121,7 +121,7 @@ router.get("/products/:productId/pdf", isLoggedIn, async (req, res) => {
     doc.fontSize(14).text(`Price: $${product.price}`);
 
     // Fetch image data and embed it in the PDF
-    const imagePath = `./public/images/${product.images_name}.png`; // Adjust the path as per your image storage location
+    const imagePath = `./public/images/${product.images_name}.png`; 
     if (fs.existsSync(imagePath)) {
       doc.image(imagePath, { fit: [250, 250] }); // Adjust image size as needed
     } else {

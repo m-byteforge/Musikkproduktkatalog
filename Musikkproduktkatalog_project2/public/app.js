@@ -219,3 +219,4 @@ async function deleteProduct(productId) {
     console.error("Error deleting product:", error);
   }
 }
+
