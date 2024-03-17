@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="container">
+                <h1>Edit Profile</h1>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div class="container">
+            <form action="/dashboard/edit" method="POST">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" value="<%= user.username %>" required>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="<%= user.email %>" required>
+                <label for="city">City</label>
+                <input type="text" id="city" name="city" value="<%= user.city %>" required>
+                <label for="country">Country</label>
+                <input type="text" id="country" name="country" value="<%= user.country %>" required>
+                <label for="zip_code">Zip Code</label>
+                <input type="text" id="zip_code" name="zip_code" value="<%= user.zip_code %>" required>
+                <label for="telephone">Telephone</label>
+                <input type="text" id="telephone" name="telephone" value="<%= user.telephone %>" required>
+                <button type="submit" class="btn">Save Changes</button>
+                <a href="/dashboard" class="btn">Back to Dashboard</a>
+            </form>
+        </div>
+    </main>
+
+</body>
+
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Product Catalog</title>
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+
+<body>
+    <header>
+        <h1>Music Product Catalog</h1>
+        <nav>
+            <ul>
+                <!-- User name will be dynamically added here -->
+                <li id="user-name-container" style="display: none;"></li>
+                <li><a href="/login">Login</a></li>
+                <li><a href="/register">Register</a></li>
+                <li><a href="/admin/login">Admin</a></li>
+                <a href="/admin/register">Register as Admin</a>
+                <!-- Inside the header -->
+
+
+            </ul>
+
+            <form action="/logout" method="POST">
+                <button type="submit">Logout</button>
+
+            </form>
+        </nav>
+    </header>
+    <main>
+        <section id="products" class="products-grid">
+            <div class="product-card" id="new-product-card">
+                <h3>Add New Product</h3>
+                <input type="text" id="new-product-id" placeholder="ID">
+                <input type="text" id="new-product-name" placeholder="Name">
+                <input type="text" id="new-product-description" placeholder="Description">
+                <input type="text" id="new-product-image-name" placeholder="Image Name">
+                <input type="text" id="new-product-price" placeholder="Price">
+                <input type="file" id="new-product-image" accept="image/*" placeholder="Image"
+                    onchange="previewImage(event)">
+                <img id="new-product-preview" src="#" alt="Product Image"
+                    style="display: none; max-width: 200px; margin-top: 10px;">
+
+                <button onclick="addNewProduct()">Add</button>
+            </div>
+        </section>
+    </main>
+    <main>
+        <div class="products-card">
+            <div class="products-grid">
+                <!-- Product cards will be dynamically added here  -->
+            </div>
+        </div>
+    </main>
+
+    <footer>
+
+    </footer>
+    <script src="app.js"></script>
+
+    <script>
+
+
+    </script>
+</body>
+
+</html>

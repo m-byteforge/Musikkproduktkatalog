@@ -1,0 +1,32 @@
+{
+  "name": "musikkproduktkatalog",
+  "version": "1.0.0",
+  "description": "```\r Musikkproduktkatalog\r ├─ public\r │  ├─ app.js\r │  ├─ images\r │  │  ├─ 1172543.jpg\r │  │  ├─ 1172544.jpg\r │  │  ├─ 1194630.png\r │  │  ├─ 1194634.png\r │  │  ├─ 1194635.png\r │  │  ├─ 1194636.png\r │  │  ├─ 1194637.png\r │  │  ├─ 1194638.png\r │  │  ├─ 1194639.png\r │  │  ├─ 1194640.png\r │  │  ├─ 1194641.png\r │  │  ├─ 1194642.png\r │  │  ├─ 1194643.png\r │  │  ├─ 1194644.png\r │  │  └─ user-128.png\r │  ├─ index.html\r │  └─ styles.css\r ├─ routes\r │  ├─ commentController.js\r │  ├─ productRoutes.js\r │  └─ userRoutes.js\r ├─ server.js\r └─ views\r    └─ index.ejs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "connect-flash": "^0.1.1",
+    "connect-pg-simple": "^9.0.1",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.9",
+    "express": "^4.18.3",
+    "express-session": "^1.18.0",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
+    "pdfkit": "^0.14.0",
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

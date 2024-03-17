@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Review</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="container">
+                <h1>Edit Review</h1>
+                <a href="/" class="btn">Home</a>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div class="container">
+            <form action="/reviews/edit/<%= review.id %>" method="POST" class="review-form">
+                <input type="number" name="rating" placeholder="Rating" value="<%= review.rating %>" required>
+                <textarea name="comment" placeholder="Comment" required><%= review.comment %></textarea>
+                <button type="submit" class="btn">Update Review</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>
