@@ -1,37 +1,43 @@
 const queryParams = new URLSearchParams(window.location.search);
-const category = queryParams.get('category');
-let sortBy = queryParams.get('sortBy');
-const priceRange = document.getElementById('priceRange');
-const minPriceOutput = document.getElementById('minPriceOutput');
-const maxPriceOutput = document.getElementById('maxPriceOutput');
-const searchInput = document.getElementById('search');
-const cartItemsKey = 'shoppingCart';
+const category = queryParams.get("category");
+let sortBy = queryParams.get("sortBy");
+const priceRange = document.getElementById("priceRange");
+const minPriceOutput = document.getElementById("minPriceOutput");
+const maxPriceOutput = document.getElementById("maxPriceOutput");
+const searchInput = document.getElementById("search");
+const cartItemsKey = "shoppingCart";
 
 function goBack() {
   window.history.back();
 }
 
 function updateCartButton() {
-  const cartButton = document.getElementById('cartButton');
+  const cartButton = document.getElementById("cartButton");
   const existingCart = JSON.parse(localStorage.getItem(cartItemsKey)) || [];
-  const totalQuantity = existingCart.reduce((total, item) => total + item.quantity, 0);
+  const totalQuantity = existingCart.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
 
-  cartButton.innerText = totalQuantity > 0 ? `🛒 Cart (${totalQuantity})` : '🛒 Cart';
+  cartButton.innerText =
+    totalQuantity > 0 ? `🛒 Cart (${totalQuantity})` : "🛒 Cart";
 }
 
 function updateCartQuantity() {
-  const cartQuantity = document.getElementById('cartQuantity');
+  const cartQuantity = document.getElementById("cartQuantity");
   if (cartQuantity) {
     const existingCart = JSON.parse(localStorage.getItem(cartItemsKey)) || [];
-    const totalQuantity = existingCart.reduce((total, item) => total + item.quantity, 0);
+    const totalQuantity = existingCart.reduce(
+      (total, item) => total + item.quantity,
+      0
+    );
     cartQuantity.innerText = totalQuantity;
   }
 }
 
-
 function createProductCard(product) {
-  const card = document.createElement('div');
-  card.classList.add('product-card');
+  const card = document.createElement("div");
+  card.classList.add("product-card");
 
   const price = formatPrice(product.price);
 
@@ -54,40 +60,41 @@ function editProduct(productId) {
     const editProductUrl = `/product/edit/${productId}`; // Assuming the URL for editing a product follows this pattern
     window.location.href = editProductUrl;
   } else {
-    console.error('Invalid productId:', productId);
+    console.error("Invalid productId:", productId);
   }
 }
 
-
 function formatPrice(price) {
-  return typeof price === 'number' ? `$${price.toFixed(2)}` : `$${parseFloat(price).toFixed(2)}`;
+  return typeof price === "number"
+    ? `$${price.toFixed(2)}`
+    : `$${parseFloat(price).toFixed(2)}`;
 }
 
 function handleSearch() {
   const searchValue = searchInput.value.toLowerCase();
-  const productCards = document.querySelectorAll('.product-card');
+  const productCards = document.querySelectorAll(".product-card");
 
-  productCards.forEach(card => {
-    const productName = card.querySelector('h5').innerText.toLowerCase();
-    card.style.display = productName.includes(searchValue) ? 'block' : 'none';
+  productCards.forEach((card) => {
+    const productName = card.querySelector("h5").innerText.toLowerCase();
+    card.style.display = productName.includes(searchValue) ? "block" : "none";
   });
 }
 
 function handlePriceRangeChange() {
   updatePriceOutputs();
-  sessionStorage.setItem('minPrice', priceRange.value);
+  sessionStorage.setItem("minPrice", priceRange.value);
   filterProductsByPrice(parseInt(priceRange.value));
 }
 
 function handleRangeMouseUp() {
-  if (priceRange.value === '100') {
+  if (priceRange.value === "100") {
     showAllProducts();
   }
 }
 
 function showAllProducts() {
-  const productCards = document.querySelectorAll('.product-card');
-  productCards.forEach(card => (card.style.display = 'block'));
+  const productCards = document.querySelectorAll(".product-card");
+  productCards.forEach((card) => (card.style.display = "block"));
 }
 
 function updatePriceOutputs() {
@@ -96,36 +103,39 @@ function updatePriceOutputs() {
 }
 
 function filterProductsByPrice(minPrice) {
-  const productCards = document.querySelectorAll('.product-card');
+  const productCards = document.querySelectorAll(".product-card");
 
-  productCards.forEach(card => {
-    const productPrice = parseFloat(card.querySelector('.product-price').innerText.replace('Price: $', ''));
+  productCards.forEach((card) => {
+    const productPrice = parseFloat(
+      card.querySelector(".product-price").innerText.replace("Price: $", "")
+    );
 
-    card.style.display = productPrice >= minPrice && productPrice <= 1000 ? 'block' : 'none';
+    card.style.display =
+      productPrice >= minPrice && productPrice <= 1000 ? "block" : "none";
   });
 }
 
 function openSidebar(sidebarId, pageUrl) {
   const sidebar = document.getElementById(sidebarId);
 
-  if (sidebarId === 'loginSidebar' || sidebarId === 'registerSidebar') {
+  if (sidebarId === "loginSidebar" || sidebarId === "registerSidebar") {
     window.location.href = pageUrl;
   } else {
-    const sidebarContent = sidebar.querySelector('.sidebar-content');
+    const sidebarContent = sidebar.querySelector(".sidebar-content");
 
     fetch(pageUrl)
-      .then(response => response.text())
-      .then(html => {
+      .then((response) => response.text())
+      .then((html) => {
         sidebarContent.innerHTML = html;
-        sidebar.style.width = '250px';
+        sidebar.style.width = "250px";
       })
-      .catch(error => console.error('Error fetching content:', error));
+      .catch((error) => console.error("Error fetching content:", error));
   }
 }
 
 function closeSidebar(sidebarId) {
   const sidebar = document.getElementById(sidebarId);
-  sidebar.style.width = '0';
+  sidebar.style.width = "0";
 }
 
 function viewProductDetails(productId) {
@@ -133,7 +143,7 @@ function viewProductDetails(productId) {
     const productDetailsUrl = `/product/details/${productId}`;
     window.location.href = productDetailsUrl;
   } else {
-    console.error('Invalid productId:', productId);
+    console.error("Invalid productId:", productId);
   }
 }
 
@@ -142,11 +152,11 @@ function addToCart(productId) {
   const product = findProductById(productId);
 
   if (!product) {
-    console.error('Product not found:', productId);
+    console.error("Product not found:", productId);
     return;
   }
 
-  const existingItem = existingCart.find(item => item.id === productId);
+  const existingItem = existingCart.find((item) => item.id === productId);
 
   if (existingItem) {
     existingItem.quantity += 1;
@@ -164,8 +174,8 @@ function addToCart(productId) {
 }
 
 function openNotification(product) {
-  const notification = document.createElement('div');
-  notification.classList.add('notification', 'product-added-notification');
+  const notification = document.createElement("div");
+  notification.classList.add("notification", "product-added-notification");
   notification.innerHTML = `
     <p>${product.name} has been added to your cart!</p>
     <button onclick="goToShoppingCart()">Go to Cart</button>
@@ -178,11 +188,13 @@ function openNotification(product) {
     document.body.removeChild(notification);
   }, 3000);
 
-  notification.style.display = 'block';
+  notification.style.display = "block";
 }
 
 function findProductById(productId) {
-  const foundProduct = products.find(product => product.id === parseInt(productId));
+  const foundProduct = products.find(
+    (product) => product.id === parseInt(productId)
+  );
   return foundProduct || null;
 }
 
@@ -195,13 +207,13 @@ function updateCartUI() {
     total += item.quantity * item.price;
   }
 
-  const totalElement = document.getElementById('total-price');
+  const totalElement = document.getElementById("total-price");
   totalElement.textContent = total.toFixed(2);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const savedMinPrice = sessionStorage.getItem('minPrice');
-  const savedMaxPrice = sessionStorage.getItem('maxPrice');
+document.addEventListener("DOMContentLoaded", () => {
+  const savedMinPrice = sessionStorage.getItem("minPrice");
+  const savedMaxPrice = sessionStorage.getItem("maxPrice");
 
   if (savedMinPrice !== null && savedMaxPrice !== null) {
     priceRange.value = savedMinPrice;
@@ -213,65 +225,67 @@ document.addEventListener('DOMContentLoaded', () => {
     filterProductsByPrice(parseInt(savedMinPrice));
   }
 
-  document.getElementById('searchButton').addEventListener('click', handleSearch);
-  document.getElementById('backButton').addEventListener('click', goBack);
-  priceRange.addEventListener('input', handlePriceRangeChange);
-  priceRange.addEventListener('mouseup', handleRangeMouseUp);
+  document
+    .getElementById("searchButton")
+    .addEventListener("click", handleSearch);
+  document.getElementById("backButton").addEventListener("click", goBack);
+  priceRange.addEventListener("input", handlePriceRangeChange);
+  priceRange.addEventListener("mouseup", handleRangeMouseUp);
 
   updateCartQuantity();
   updateCartButton();
   fetchProducts();
 });
 
-const productsUrl = '/products';
+const productsUrl = "/products";
 let products = [];
 
 function fetchProducts() {
   fetch(productsUrl)
-    .then(response => {
+    .then((response) => {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       return response.json();
     })
-    .then(data => {
+    .then((data) => {
       products = data;
-      const productContainer = document.getElementById('product-container');
-      products.forEach(product => {
+      const productContainer = document.getElementById("product-container");
+      products.forEach((product) => {
         const card = createProductCard(product);
         productContainer.appendChild(card);
       });
     })
-    .catch(error => console.error('Error fetching products:', error));
+    .catch((error) => console.error("Error fetching products:", error));
 
   updateCartQuantity();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const cartItemsKey = 'shoppingCart';
+document.addEventListener("DOMContentLoaded", () => {
+  const cartItemsKey = "shoppingCart";
 
-  const emptyCartButton = document.getElementById('empty-cart-button');
-  const checkoutButton = document.getElementById('checkout-button');
+  const emptyCartButton = document.getElementById("empty-cart-button");
+  const checkoutButton = document.getElementById("checkout-button");
 
-  emptyCartButton.addEventListener('click', emptyShoppingCart);
-  checkoutButton.addEventListener('click', proceedToCheckout);
+  emptyCartButton.addEventListener("click", emptyShoppingCart);
+  checkoutButton.addEventListener("click", proceedToCheckout);
 
   updateShoppingCartUI();
 });
 
 function updateShoppingCartUI() {
-  const cartItemsElement = document.getElementById('cart-items');
-  const totalElement = document.getElementById('total-price');
+  const cartItemsElement = document.getElementById("cart-items");
+  const totalElement = document.getElementById("total-price");
 
-  const shoppingCart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+  const shoppingCart = JSON.parse(localStorage.getItem("shoppingCart")) || [];
 
-  cartItemsElement.innerHTML = '';
+  cartItemsElement.innerHTML = "";
 
   let total = 0;
 
   for (const item of shoppingCart) {
-    const cartItem = document.createElement('div');
-    cartItem.className = 'cart-item';
+    const cartItem = document.createElement("div");
+    cartItem.className = "cart-item";
 
     cartItem.innerHTML = `
       <p>ID: ${item.id}</p>
@@ -288,40 +302,36 @@ function updateShoppingCartUI() {
 
   totalElement.textContent = total.toFixed(2);
 
-  const deleteButtons = document.querySelectorAll('.delete-button');
+  const deleteButtons = document.querySelectorAll(".delete-button");
   for (const button of deleteButtons) {
-    button.addEventListener('click', removeFromCart);
+    button.addEventListener("click", removeFromCart);
   }
 }
 
-
-
-
-
-searchInput.addEventListener('input', handleSearch);
+searchInput.addEventListener("input", handleSearch);
 
 function changeQuantity(productId, action) {
   const existingCart = JSON.parse(localStorage.getItem(cartItemsKey)) || [];
-  const existingItem = existingCart.find(item => item.id === productId);
+  const existingItem = existingCart.find((item) => item.id === productId);
 
   if (existingItem) {
-    if (action === 'increase') {
+    if (action === "increase") {
       existingItem.quantity += 1;
-    } else if (action === 'decrease') {
+    } else if (action === "decrease") {
       existingItem.quantity = Math.max(1, existingItem.quantity - 1);
     }
 
     localStorage.setItem(cartItemsKey, JSON.stringify(existingCart));
-    alert('Quantity updated!');
+    alert("Quantity updated!");
     updateCartQuantity();
   } else {
-    console.error('Product not found in the cart:', productId);
+    console.error("Product not found in the cart:", productId);
   }
 }
 
 function emptyShoppingCart() {
   localStorage.removeItem(cartItemsKey);
-  sessionStorage.removeItem('cartQuantity');
+  sessionStorage.removeItem("cartQuantity");
   updateCartUI();
   updateCartButton();
   updateCartQuantity();
@@ -330,11 +340,10 @@ function emptyShoppingCart() {
 
 function emptyShoppingCart() {
   localStorage.removeItem(cartItemsKey);
-  sessionStorage.removeItem('cartQuantity');
+  sessionStorage.removeItem("cartQuantity");
   updateCartUI();
   updateCartButton();
 }
-
 
 function emptyShoppingCart() {
   localStorage.removeItem(cartItemsKey);
@@ -342,27 +351,26 @@ function emptyShoppingCart() {
   updateCartButton();
 }
 
-
 function emptyShoppingCart() {
   localStorage.removeItem(cartItemsKey);
-  sessionStorage.removeItem('cartQuantity');
+  sessionStorage.removeItem("cartQuantity");
   updateCartUI();
   updateCartButton();
   updateCartQuantity();
 }
 
 function emptyShoppingCart() {
-  const cartItemsKey = 'shoppingCart';
+  const cartItemsKey = "shoppingCart";
   const existingCart = JSON.parse(localStorage.getItem(cartItemsKey)) || [];
 
   if (existingCart.length > 0) {
     localStorage.removeItem(cartItemsKey);
 
-    const cartItemsElement = document.getElementById('cart-items');
-    const totalElement = document.getElementById('total-price');
+    const cartItemsElement = document.getElementById("cart-items");
+    const totalElement = document.getElementById("total-price");
 
-    cartItemsElement.innerHTML = '';
-    totalElement.textContent = '0.00';
+    cartItemsElement.innerHTML = "";
+    totalElement.textContent = "0.00";
 
     showEmptyCartNotification();
 
@@ -371,8 +379,8 @@ function emptyShoppingCart() {
 }
 
 function showEmptyCartNotification() {
-  const notification = document.createElement('div');
-  notification.classList.add('notification');
+  const notification = document.createElement("div");
+  notification.classList.add("notification");
   notification.innerHTML = `
     <p>Your cart has been emptied!</p>
 
@@ -384,72 +392,69 @@ function showEmptyCartNotification() {
     document.body.removeChild(notification);
   }, 3000);
 
-  notification.style.display = 'block';
+  notification.style.display = "block";
 }
 
 function proceedToCheckout() {
-  window.location.href = '/details';
+  window.location.href = "/details";
 }
-
 
 function goHome() {
-  window.location.href = '/';
+  window.location.href = "/";
 }
 
-var cartButton = document.getElementById('cart-button');
+var cartButton = document.getElementById("cart-button");
 
 function updateCartButton(cartQuantity) {
-  console.log('Updating cart button. Cart quantity:', cartQuantity);
+  console.log("Updating cart button. Cart quantity:", cartQuantity);
 
-  var cartButton = document.getElementById('cart-button');
+  var cartButton = document.getElementById("cart-button");
   if (cartButton) {
     // Rest of the code...
   } else {
-    console.error('Cart button element not found.');
+    console.error("Cart button element not found.");
   }
 }
 
-
 updateCartButton(0);
 
-
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   updateShoppingCartUI();
 });
 
 function changeCartItemQuantity(productId, action) {
   console.log(`Changing quantity for product ${productId}. Action: ${action}`);
   const existingCart = JSON.parse(localStorage.getItem(cartItemsKey)) || [];
-  const existingItem = existingCart.find(item => item.id === productId);
+  const existingItem = existingCart.find((item) => item.id === productId);
 
   if (existingItem) {
-    if (action === 'increase') {
+    if (action === "increase") {
       existingItem.quantity += 1;
-    } else if (action === 'decrease') {
+    } else if (action === "decrease") {
       existingItem.quantity = Math.max(1, existingItem.quantity - 1);
     }
 
     localStorage.setItem(cartItemsKey, JSON.stringify(existingCart));
     updateShoppingCartUI();
-    alert('Quantity updated!');
+    alert("Quantity updated!");
   } else {
-    console.error('Product not found in the cart:', productId);
+    console.error("Product not found in the cart:", productId);
   }
 }
 
 function updateShoppingCartUI() {
-  const cartItemsElement = document.getElementById('cart-items');
-  const totalElement = document.getElementById('total-price');
+  const cartItemsElement = document.getElementById("cart-items");
+  const totalElement = document.getElementById("total-price");
 
-  const shoppingCart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+  const shoppingCart = JSON.parse(localStorage.getItem("shoppingCart")) || [];
 
-  cartItemsElement.innerHTML = '';
+  cartItemsElement.innerHTML = "";
 
   let total = 0;
 
   for (const item of shoppingCart) {
-    const cartItem = document.createElement('div');
-    cartItem.className = 'cart-item';
+    const cartItem = document.createElement("div");
+    cartItem.className = "cart-item";
 
     cartItem.innerHTML = `
       <p>ID: ${item.id}</p>
@@ -462,7 +467,6 @@ function updateShoppingCartUI() {
       <button class="delete-button" data-id="${item.id}" onclick="removeFromCart(${item.id})">Delete</button>
     `;
 
-
     cartItemsElement.appendChild(cartItem);
 
     total += item.quantity * item.price;
@@ -470,34 +474,34 @@ function updateShoppingCartUI() {
 
   totalElement.textContent = total.toFixed(2);
 
-  const deleteButtons = document.querySelectorAll('.delete-button');
+  const deleteButtons = document.querySelectorAll(".delete-button");
   for (const button of deleteButtons) {
-    button.addEventListener('click', removeFromCart);
+    button.addEventListener("click", removeFromCart);
   }
 }
 
 function changeCartItemQuantity(productId, action) {
   console.log(`Changing quantity for product ${productId}. Action: ${action}`);
   const existingCart = JSON.parse(localStorage.getItem(cartItemsKey)) || [];
-  const existingItem = existingCart.find(item => item.id === productId);
+  const existingItem = existingCart.find((item) => item.id === productId);
 
   if (existingItem) {
-    if (action === 'increase') {
+    if (action === "increase") {
       existingItem.quantity += 1;
-    } else if (action === 'decrease') {
+    } else if (action === "decrease") {
       existingItem.quantity = Math.max(1, existingItem.quantity - 1);
     }
 
     localStorage.setItem(cartItemsKey, JSON.stringify(existingCart));
     updateShoppingCartUI();
-    displayNotification('Quantity updated!');
+    displayNotification("Quantity updated!");
   } else {
-    console.error('Product not found in the cart:', productId);
+    console.error("Product not found in the cart:", productId);
   }
 }
 function displayNotification(message) {
-  const notification = document.createElement('div');
-  notification.classList.add('notification');
+  const notification = document.createElement("div");
+  notification.classList.add("notification");
   notification.innerHTML = `<p>${message}</p>`;
 
   document.body.appendChild(notification);
@@ -506,26 +510,25 @@ function displayNotification(message) {
     document.body.removeChild(notification);
   }, 3000);
 
-  notification.style.display = 'block';
+  notification.style.display = "block";
 }
 function removeFromCart(productId) {
   console.log(`Removing product ${productId} from the cart`);
   const existingCart = JSON.parse(localStorage.getItem(cartItemsKey)) || [];
-  const updatedCart = existingCart.filter(item => item.id !== productId);
+  const updatedCart = existingCart.filter((item) => item.id !== productId);
   localStorage.setItem(cartItemsKey, JSON.stringify(updatedCart));
-  
+
   // Update UI after removing item
   updateCartButton();
   updateCartQuantity();
   updateShoppingCartUI();
 }
 
-
 function proceedToCheckout() {
-  window.location.href = '/checkout';
+  window.location.href = "/checkout";
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   updateCartQuantity();
   updateCartButton();
   fetchProducts();
@@ -535,24 +538,23 @@ document.addEventListener('DOMContentLoaded', () => {
 // Fetch user data
 async function fetchUserData() {
   try {
-    const response = await fetch('/get-user-data'); // Assuming you have a route to get user data
+    const response = await fetch("/get-user-data"); // Assuming you have a route to get user data
     const userData = await response.json();
 
     // Update user information in the checkout page
-    const customerNameSpan = document.getElementById('customerName');
-    const customerEmailSpan = document.getElementById('customerEmail');
+    const customerNameSpan = document.getElementById("customerName");
+    const customerEmailSpan = document.getElementById("customerEmail");
 
     if (customerNameSpan && customerEmailSpan) {
-      customerNameSpan.innerText = userData.name || '';
-      customerEmailSpan.innerText = userData.email || '';
+      customerNameSpan.innerText = userData.name || "";
+      customerEmailSpan.innerText = userData.email || "";
     }
   } catch (error) {
-    console.error('Error fetching user data:', error);
+    console.error("Error fetching user data:", error);
   }
 }
 
-
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   updateCartQuantity();
   updateCartButton();
   fetchProducts();
@@ -563,25 +565,25 @@ document.addEventListener('DOMContentLoaded', () => {
 // Fetch shipping methods
 async function fetchShippingMethods() {
   try {
-    const response = await fetch('/get-shipping-methods');
+    const response = await fetch("/get-shipping-methods");
     const shippingMethods = await response.json();
 
     // Update the UI with shipping methods
     updateShippingMethodsUI(shippingMethods);
   } catch (error) {
-    console.error('Error fetching shipping methods:', error);
+    console.error("Error fetching shipping methods:", error);
   }
 }
 
 function updateShippingMethodsUI(shippingMethods) {
-  const shippingMethodsContainer = document.getElementById('shippingMethods');
+  const shippingMethodsContainer = document.getElementById("shippingMethods");
 
   if (shippingMethodsContainer) {
-    shippingMethodsContainer.innerHTML = '';
+    shippingMethodsContainer.innerHTML = "";
 
-    shippingMethods.forEach(method => {
-      const shippingMethodElement = document.createElement('div');
-      shippingMethodElement.className = 'shipping-method';
+    shippingMethods.forEach((method) => {
+      const shippingMethodElement = document.createElement("div");
+      shippingMethodElement.className = "shipping-method";
       shippingMethodElement.innerHTML = `
         <input type="radio" name="shippingMethod" value="${method.id}">
         <label>${method.name} - $${method.price.toFixed(2)}</label>
@@ -591,63 +593,58 @@ function updateShippingMethodsUI(shippingMethods) {
   }
 }
 
-app.get('/get-shipping-methods', (req, res) => {
+app.get("/get-shipping-methods", (req, res) => {
   try {
     // Retrieve shipping methods and prices from the database or another source
     const shippingMethods = [
-      { name: 'Standard Shipping', price: 5.99 },
-      { name: 'Express Shipping', price: 12.99 },
+      { name: "Standard Shipping", price: 5.99 },
+      { name: "Express Shipping", price: 12.99 },
       // Add more shipping methods as needed
     ];
 
     res.json(shippingMethods);
   } catch (error) {
-    console.error('Error retrieving shipping methods:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Error retrieving shipping methods:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-
 //----------------------------------------------------------------------------------------
 
-
-
 function emptyShoppingCart() {
-  const cartItemsKey = 'shoppingCart';
+  const cartItemsKey = "shoppingCart";
   const existingCart = JSON.parse(localStorage.getItem(cartItemsKey)) || [];
 
   if (existingCart.length > 0) {
     localStorage.removeItem(cartItemsKey);
 
     // Optionally, you can update the UI or provide a notification here
-    alert('Shopping Cart has been emptied!');
+    alert("Shopping Cart has been emptied!");
 
     // Redirect to the home page or any other desired page
-    window.location.href = '/';
-  } 
+    window.location.href = "/";
+  }
 }
 
-
-
-
 async function addComment() {
-  const commentText = document.getElementById('commentText').value;
-  const ratingInput = document.getElementById('ratingInput').value;
+  const commentText = document.getElementById("commentText").value;
+  const ratingInput = document.getElementById("ratingInput").value;
 
   // Validate comment and rating
   if (!commentText.trim() || !ratingInput) {
-    document.getElementById('commentErrorMessage').textContent = 'Please enter both comment and rating.';
+    document.getElementById("commentErrorMessage").textContent =
+      "Please enter both comment and rating.";
     return;
   }
 
   // Assuming you have a variable 'productId' with the current product ID
-  const productId = '<%= product.id %>';
+  const productId = "<%= product.id %>";
 
   try {
-    const response = await fetch('/api/comments/add', {
-      method: 'POST',
+    const response = await fetch("/api/comments/add", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         productId,
@@ -660,63 +657,48 @@ async function addComment() {
       // Comment added successfully, update the UI or fetch the comments again
       fetchProductReviews(productId);
       // Clear input fields
-      document.getElementById('commentText').value = '';
-      document.getElementById('ratingInput').value = '';
-      document.getElementById('commentErrorMessage').textContent = '';
+      document.getElementById("commentText").value = "";
+      document.getElementById("ratingInput").value = "";
+      document.getElementById("commentErrorMessage").textContent = "";
     } else {
       // Handle the error
-      console.error('Error adding comment:', response.statusText);
-      document.getElementById('commentErrorMessage').textContent = 'Error adding comment. Please try again.';
+      console.error("Error adding comment:", response.statusText);
+      document.getElementById("commentErrorMessage").textContent =
+        "Error adding comment. Please try again.";
     }
   } catch (error) {
-    console.error('Error adding comment:', error);
-    document.getElementById('commentErrorMessage').textContent = 'Error adding comment. Please try again.';
+    console.error("Error adding comment:", error);
+    document.getElementById("commentErrorMessage").textContent =
+      "Error adding comment. Please try again.";
   }
 }
 
-
-<<<<<<< HEAD
 async function getReviewsForProduct(productId) {
   try {
     const result = await pool.query(
-      'SELECT * FROM reviews WHERE product_id = $1 ORDER BY created_at DESC',
+      "SELECT * FROM reviews WHERE product_id = $1 ORDER BY created_at DESC",
       [productId]
     );
     return result.rows;
-=======
-
-
-
-async function getReviewsForProduct(productId) {
-  try {
-    const response = await fetch(`/api/reviews/product/${productId}`);
-    const reviews = await response.json();
-    return reviews;
->>>>>>> 74d9084bccd5d290600b374f295a6613af7dfb32
   } catch (error) {
-    console.error('Error fetching reviews:', error);
+    console.error("Error fetching reviews:", error);
     throw error;
   }
 }
-<<<<<<< HEAD
-
-//----------------------
 
 // app.js
 
-const i18next = require('i18next');
-const Backend = require('i18next-http-backend');
-const LanguageDetector = require('i18next-browser-languagedetector');
+const i18next = require("i18next");
+const Backend = require("i18next-http-backend");
+const LanguageDetector = require("i18next-browser-languagedetector");
 
 i18next
   .use(Backend)
   .use(LanguageDetector)
   .init({
-    fallbackLng: 'en', // Default language if translation not available
+    fallbackLng: "en", // Default language if translation not available
     debug: true, // Enable debug mode
     backend: {
-      loadPath: '/locales/{{lng}}/{{ns}}.json' // Path to your translation files
-    }
+      loadPath: "/locales/{{lng}}/{{ns}}.json", // Path to your translation files
+    },
   });
-=======
->>>>>>> 74d9084bccd5d290600b374f295a6613af7dfb32

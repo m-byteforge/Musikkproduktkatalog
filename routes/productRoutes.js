@@ -79,12 +79,6 @@ const { addComment } = require('../controllers/commentController');
 router.post('/comments/add', addComment);
 
 
-
-// productRoutes.js
-
-// ... (existing code)
-
-// Add a review for a product
 router.post('/api/reviews/add', async (req, res) => {
   const { productId, rating, comment } = req.body;
 
@@ -107,14 +101,7 @@ router.post('/api/reviews/add', async (req, res) => {
 
 const { addReview, getReviewsForProduct } = require('../controllers/reviewController');
 
-// ... (existing code)
-
-// Add a review for a product
 router.post('/api/reviews/add', ensureAuthenticated, addReview);
-
-// productRoutes.js
-
-// ... (existing code)
 
 const { addReviewToDatabase } = require('../controllers/reviewController');
 
@@ -123,11 +110,7 @@ router.post('/api/reviews/add-to-database', async (req, res) => {
   const { productId, rating, comment } = req.body;
 
   try {
-    // Implement the logic to add the review to the database
-    // This might involve interacting with your database (e.g., using SQL queries)
-    // For simplicity, let's assume you have a function `addToDatabase` for this purpose
-
-    // Example:
+ 
     const result = await addToDatabase(productId, rating, comment);
 
     if (result) {
@@ -140,7 +123,6 @@ router.post('/api/reviews/add-to-database', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
->>>>>>> 74d9084bccd5d290600b374f295a6613af7dfb32
 
     res.redirect('/products');
   } catch (error) {

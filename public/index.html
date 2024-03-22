@@ -57,7 +57,6 @@
     </div>
 
     <div id="product-container" class="product-grid">
-      <!-- Product cards will be dynamically added here -->
     </div>
     
     
@@ -66,11 +65,9 @@
   <script src="/app.js"></script>
   <script>
     function switchLanguage(language) {
-  // Send a request to the server to set the selected language
   fetch(`/set-language?lang=${language}`)
     .then(response => {
       if (response.ok) {
-        // Reload the page to reflect the language change
         window.location.reload();
       } else {
         console.error('Failed to set language:', response.statusText);
