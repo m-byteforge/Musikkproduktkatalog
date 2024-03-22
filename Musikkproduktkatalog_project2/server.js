@@ -22,6 +22,8 @@ app.use(
     saveUninitialized: true,
   })
 );
+
+
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session()); // Use Passport session middleware

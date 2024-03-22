@@ -1,7 +1,9 @@
 // adminController.js
 
+
+const { passport, isLoggedIn } = require('../auth');
 const bcrypt = require('bcrypt');
-const passport = require('../passport-config'); // Correct the import path
+const { pool } = require('../database');
 
 // Function to render the login page for admin
 function getLoginPage(req, res) {
@@ -24,7 +26,20 @@ function getRegisterPage(req, res) {
 
 // Function to handle admin registration
 async function register(req, res) {
-    // Registration logic
+    try {
+        const { username, password, email } = req.body;
+        
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Insert admin details into the database
+        await pool.query('INSERT INTO admins (username, password, email) VALUES ($1, $2, $3)', [username, hashedPassword, email]);
+
+        res.redirect('/admin/login'); // Redirect to login page after successful registration
+    } catch (error) {
+        console.error('Error registering admin:', error);
+        res.status(500).send('Internal Server Error');
+    }
 }
 
 // Function to render the dashboard for admin
